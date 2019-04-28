@@ -62,7 +62,8 @@
 
       <!-- Table -->
       <div class="col table-responsive">
-        <pivot-table :data="data" :row-fields="internal.rowFields" :col-fields="internal.colFields" :reducer="reducer" :no-data-warning-text="noDataWarningText" :is-data-loading="isDataLoading">
+        <!-- NOTE: Customization -->
+        <pivot-table :data="data" :row-fields="internal.rowFields" :col-fields="internal.colFields" :reducer="reducer" :no-data-warning-text="noDataWarningText" :is-data-loading="isDataLoading" :values-to-display="valuesToDisplay" :show-row-sum="showRowSum" :show-col-sum="showColSum">
           <!-- pass down scoped slots -->
           <template v-for="(slot, slotName) in $scopedSlots" :slot="slotName" slot-scope="{ value }">
             <slot :name="slotName" v-bind="{ value }"></slot>
@@ -135,6 +136,21 @@ export default {
     isDataLoading: {
       type: Boolean,
       default: false
+    },
+    // NOTE: Customization
+    valuesToDisplay: {
+      type: String,
+      required: true
+    },
+    // NOTE: Customization
+    showRowSum: {
+      type: Boolean,
+      required: true
+    },
+    // NOTE: Customization
+    showColSum: {
+      type: Boolean,
+      required: true
     }
   },
   data: function() {

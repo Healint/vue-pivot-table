@@ -12,6 +12,9 @@
         :col-fields="colFields"
         :reducer="reducer"
         :default-show-settings="defaultShowSettings"
+        :values-to-display="'raw-numbers'"
+        :show-row-sum="true"
+        :show-col-sum="true"
       >
         <template slot="value" slot-scope="{ value }">
           {{ value | number }}
@@ -34,6 +37,9 @@
         :reducer="reducer"
         :default-show-settings="defaultShowSettings"
         :is-data-loading="isDataLoading"
+        :values-to-display="'raw-numbers'"
+        :show-row-sum="true"
+        :show-col-sum="true"
       >
         <template slot="value" slot-scope="{ value }">
           {{ value | number }}
