@@ -63,7 +63,7 @@
       <!-- Table -->
       <div class="col table-responsive">
         <!-- NOTE: Customization -->
-        <pivot-table :data="data" :row-fields="internal.rowFields" :col-fields="internal.colFields" :reducer="reducer" :no-data-warning-text="noDataWarningText" :is-data-loading="isDataLoading" :values-to-display="valuesToDisplay" :show-row-sum="showRowSum" :show-col-sum="showColSum">
+        <pivot-table :data="data" :row-fields="internal.rowFields" :col-fields="internal.colFields" :reducer="reducer" :no-data-warning-text="noDataWarningText" :is-data-loading="isDataLoading" :values-to-display="valuesToDisplay">
           <!-- pass down scoped slots -->
           <template v-for="(slot, slotName) in $scopedSlots" :slot="slotName" slot-scope="{ value }">
             <slot :name="slotName" v-bind="{ value }"></slot>
@@ -141,24 +141,14 @@ export default {
     valuesToDisplay: {
       type: String,
       required: true
-    },
-    // NOTE: Customization
-    showRowSum: {
-      type: Boolean,
-      required: true
-    },
-    // NOTE: Customization
-    showColSum: {
-      type: Boolean,
-      required: true
     }
   },
   data: function() {
     return {
       internal: {
-        fields: this.fields,
-        rowFields: this.rowFields,
-        colFields: this.colFields
+        fields: [],
+        rowFields: [],
+        colFields: []
       },
       dragging: false,
       showSettings: true
@@ -182,6 +172,23 @@ export default {
   },
   created: function() {
     this.showSettings = this.defaultShowSettings
+  },
+  watch: {
+    fields (newValue) {
+      if (newValue) {
+        this.internal.fields = this.fields
+      }
+    },
+    rowFields (newValue) {
+      if (newValue) {
+        this.internal.rowFields = this.rowFields
+      }
+    },
+    colFields (newValue) {
+      if (newValue) {
+        this.internal.colFields = this.colFields
+      }
+    }
   }
 }
 </script>
