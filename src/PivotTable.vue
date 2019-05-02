@@ -28,7 +28,7 @@
           </template>
           <!-- Top right cell -->
           <!-- NOTE: Customization -->
-          <td v-if="showRowSum && valuesToDisplay !== 'percentage-col-sum' && colFieldIndex === 0 && colFields.length > 0" :rowspan="colFields.length" class="summation">Row Sum<sup v-if="valuesToDisplay !== 'raw-numbers'">*</sup></td>
+          <td v-if="valuesToDisplay !== 'percentage-col-sum' && colFieldIndex === 0 && colFields.length > 0" :rowspan="colFields.length" class="summation">Row Sum<sup v-if="valuesToDisplay !== 'raw-numbers'">*</sup></td>
         </tr>
       </thead>
       <!-- Table body -->
@@ -55,7 +55,7 @@
           </td>
           <!-- NOTE: Customization -->
           <!-- Row footers (if slots are provided) -->
-          <template v-if="showRowSum && colFields.length > 0">
+          <template v-if="colFields.length > 0">
             <td v-if="valuesToDisplay === 'raw-numbers'" class="summation">{{ rowSums[rowIndex].toLocaleString() }}</td>
             <td v-else-if="valuesToDisplay === 'percentage-row-sum'" class="summation">100%</td>
           </template>
@@ -63,7 +63,7 @@
       </tbody>
       <!-- NOTE: Customization -->
       <!-- Table footer -->
-      <tfoot v-if="showColSum && valuesToDisplay !== 'percentage-row-sum' && rowFields.length > 0">
+      <tfoot v-if="valuesToDisplay !== 'percentage-row-sum' && rowFields.length > 0">
         <tr>
           <!-- Bottom left cell -->
           <td :colspan="rowFields.length" class="summation">Column Sum<sup v-if="valuesToDisplay !== 'raw-numbers'">*</sup></td>
@@ -73,7 +73,7 @@
             <template v-else-if="valuesToDisplay === 'percentage-col-sum'">100%</template>
           </td>
           <!-- Bottom right dead cell -->
-          <td v-if="showRowSum && valuesToDisplay !== 'percentage-col-sum' && colFields.length > 0" class="summation"></td>
+          <td v-if="valuesToDisplay !== 'percentage-col-sum' && colFields.length > 0" class="summation"></td>
         </tr>
       </tfoot>
     </table>
@@ -115,18 +115,6 @@ export default {
       type: String,
       required: true,
       default: () => 'raw-numbers'
-    },
-    // NOTE: Customization
-    showRowSum: {
-      type: Boolean,
-      required: true,
-      default: () => true
-    },
-    // NOTE: Customization
-    showColSum: {
-      type: Boolean,
-      required: true,
-      default: () => true
     }
   },
   data () {
@@ -358,7 +346,7 @@ td {
   min-width: 6rem;
 }
 /* NOTE: Customizations */
-tfoot > tr > td {
+tfoot > tr > td:not(:last-child) {
   border-top: 2px solid #dee2e6;
   font-style: italic;
   text-align: right;
