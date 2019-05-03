@@ -115,6 +115,11 @@ export default {
       type: String,
       required: true,
       default: () => 'raw-numbers'
+    },
+    aggregationField: {
+      type: String,
+      required: false,
+      default: () => ''
     }
   },
   data () {
@@ -129,11 +134,11 @@ export default {
     },
     // NOTE: Customization
     colSums   () {
-      return this.computeSums('col')
+      return this.computeValues('col')
     },
     // NOTE: Customization
     rowSums   () {
-      return this.computeSums('row')
+      return this.computeValues('row')
     },
     // NOTE: Customization
     valuesColPercentage () { return this.computePercentages('col') },
@@ -285,27 +290,50 @@ export default {
       this.rows.forEach(row => {
         const rowData = this.filteredData({ data: this.data, rowFilters: row })
         this.cols.forEach(col => {
-          const data = this.filteredData({ data: rowData, colFilters: col })
-
+          const datasets = this.filteredData({ data: rowData, colFilters: col })
+          
           const key = JSON.stringify({ col, row })
-          const value = data.reduce(this.reducer, 0)
+          const aggregate = datasets.reduce(this.reducer, 0)
+          const numberOfDatasets = datasets.length
+          
+          const value = (
+            this.aggregationField === 'mean'
+              ? (
+                aggregate && numberOfDatasets // If `NaN`, return 0
+                  ? (aggregate / numberOfDatasets)
+                  : 0
+              )
+              : aggregate
+          )
           this.values[key] = value
         })
       })
     },
     // NOTE: Customization
-    // Compute sum of colums or rows
-    computeSums (rowOrCol) {
+    // Compute the chosen aggregate of columns or rows
+    computeValues (rowOrCol) {
       return (
         this[`${rowOrCol}s`]
           .map(
             field => {
               let reference = `"${rowOrCol}":${JSON.stringify(field)}`
-
-              return this.entries
-                .filter(([key, value]) => key.includes(reference))
-                .map(([key, value]) => value)
-                .reduce((aggregate, figure) => aggregate + figure, 0)
+              let aggregate = (
+                this.entries
+                  .filter(([key, value]) => key.includes(reference))
+                  .map(([key, value]) => value)
+                  .reduce((aggregate, figure) => aggregate + figure, 0)
+              )
+              let numberOfDatasets = values.length
+  
+              return (
+                this.aggregationField === 'mean'
+                  ? (
+                    aggregate && numberOfDatasets // If `NaN`, return 0
+                      ? (aggregate / numberOfDatasets)
+                      : 0
+                  )
+                  : aggregate
+              )
             }
           )
       )
@@ -332,6 +360,9 @@ export default {
   },
   watch: {
     colsAndRows () {
+      this.computeValues()
+    },
+    reducer () {
       this.computeValues()
     }
   },
