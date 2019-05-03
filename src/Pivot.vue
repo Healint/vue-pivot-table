@@ -174,20 +174,29 @@ export default {
     this.showSettings = this.defaultShowSettings
   },
   watch: {
-    fields (newValue) {
-      if (newValue) {
-        this.internal.fields = this.fields
-      }
+    fields: {
+      handler (newValue) {
+        if (newValue.length) {
+          this.internal.fields = this.fields
+        }
+      },
+      immediate: true
     },
-    rowFields (newValue) {
-      if (newValue) {
-        this.internal.rowFields = this.rowFields
-      }
+    rowFields: {
+      handler (newValue) {
+        if (newValue.length) {
+          this.internal.rowFields = this.rowFields
+        }
+      },
+      immediate: true
     },
-    colFields (newValue) {
-      if (newValue) {
-        this.internal.colFields = this.colFields
-      }
+    colFields: {
+      handler (newValue) {
+        if (newValue.length) {
+          this.internal.colFields = this.colFields
+        }
+      },
+      immediate: true
     }
   }
 }
