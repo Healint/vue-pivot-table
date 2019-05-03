@@ -323,7 +323,7 @@ export default {
                   .map(([key, value]) => value)
                   .reduce((aggregate, figure) => aggregate + figure, 0)
               )
-              let numberOfDatasets = values.length
+              let numberOfDatasets = aggregate.length
   
               return (
                 this.aggregationField === 'mean'
