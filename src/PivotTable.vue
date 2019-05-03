@@ -330,7 +330,7 @@ export default {
                   ? (
                     aggregate && numberOfDatasets // If `NaN`, return 0
                       ? (aggregate / numberOfDatasets)
-                      : 0
+                      : ''
                   )
                   : aggregate
               )
@@ -362,7 +362,7 @@ export default {
     colsAndRows () {
       this.computeValues()
     },
-    reducer () {
+    aggregationField () {
       this.computeValues()
     }
   },
