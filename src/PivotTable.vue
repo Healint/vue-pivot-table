@@ -134,11 +134,11 @@ export default {
     },
     // NOTE: Customization
     colSums   () {
-      return this.computeValues('col')
+      return this.computeChosenAggregates('col')
     },
     // NOTE: Customization
     rowSums   () {
-      return this.computeValues('row')
+      return this.computeChosenAggregates('row')
     },
     // NOTE: Customization
     valuesColPercentage () { return this.computePercentages('col') },
@@ -311,7 +311,7 @@ export default {
     },
     // NOTE: Customization
     // Compute the chosen aggregate of columns or rows
-    computeValues (rowOrCol) {
+    computeChosenAggregates (rowOrCol) {
       return (
         this[`${rowOrCol}s`]
           .map(
