@@ -146,9 +146,9 @@ export default {
   data: function() {
     return {
       internal: {
-        fields: [],
-        rowFields: [],
-        colFields: []
+        fields: this.fields,
+        rowFields: this.rowFields,
+        colFields: this.colFields
       },
       dragging: false,
       showSettings: true
@@ -173,32 +173,6 @@ export default {
   created: function() {
     this.showSettings = this.defaultShowSettings
   },
-  watch: {
-    fields: {
-      handler (newValue) {
-        if (newValue.length) {
-          this.internal.fields = this.fields
-        }
-      },
-      immediate: true
-    },
-    rowFields: {
-      handler (newValue) {
-        if (newValue.length) {
-          this.internal.rowFields = this.rowFields
-        }
-      },
-      immediate: true
-    },
-    colFields: {
-      handler (newValue) {
-        if (newValue.length) {
-          this.internal.colFields = this.colFields
-        }
-      },
-      immediate: true
-    }
-  }
 }
 </script>
 
