@@ -116,10 +116,15 @@ export default {
       required: true,
       default: () => 'raw-numbers'
     },
+    // NOTE: Customization
+    aggregationLogic: {
+      type: String,
+      required: true
+    },
+    // NOTE: Customization
     aggregationField: {
       type: String,
-      required: false,
-      default: () => ''
+      required: true
     }
   },
   data () {
@@ -363,6 +368,9 @@ export default {
       this.computeValues()
     },
     aggregationField () {
+      this.computeValues()
+    },
+    aggregationLogic () {
       this.computeValues()
     }
   },

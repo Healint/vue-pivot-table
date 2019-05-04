@@ -13,6 +13,8 @@
         :reducer="reducer"
         :default-show-settings="defaultShowSettings"
         :values-to-display="'raw-numbers'"
+        :aggregation-logic="aggregationLogic"
+        :aggregation-field="aggregationField"
       >
         <template slot="value" slot-scope="{ value }">
           {{ value | number }}
@@ -36,6 +38,8 @@
         :default-show-settings="defaultShowSettings"
         :is-data-loading="isDataLoading"
         :values-to-display="'raw-numbers'"
+        :aggregation-logic="aggregationLogic"
+        :aggregation-field="aggregationField"
       >
         <template slot="value" slot-scope="{ value }">
           {{ value | number }}
