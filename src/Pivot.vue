@@ -133,10 +133,6 @@ export default {
       type: String,
       default: 'No data to display.'
     },
-    isDataLoading: {
-      type: Boolean,
-      default: false
-    },
     // NOTE: Customization
     valuesToDisplay: {
       type: String,

@@ -6,13 +6,13 @@
 
     <div class="mb-5">
       <pivot
-        :data="data"
+        :data="asyncData"
         :fields="fields"
         :row-fields="rowFields"
         :col-fields="colFields"
         :reducer="reducer"
         :default-show-settings="defaultShowSettings"
-        :values-to-display="'raw-numbers'"
+        :values-to-display="valuesToDisplay"
         :aggregation-logic="aggregationLogic"
         :aggregation-field="aggregationField"
       >
@@ -37,7 +37,7 @@
         :reducer="reducer"
         :default-show-settings="defaultShowSettings"
         :is-data-loading="isDataLoading"
-        :values-to-display="'raw-numbers'"
+        :values-to-display="valuesToDisplay"
         :aggregation-logic="aggregationLogic"
         :aggregation-field="aggregationField"
       >
@@ -63,39 +63,50 @@
 <script>
 import Pivot from '../src/Pivot'
 import PivotTable from '../src/PivotTable'
-import data from './data'
+
+const aggregationField = 'Sample'
 
 export default {
   name: 'app',
   components: { Pivot, PivotTable },
   data: () => {
     return {
-      data: data,
+      aggregationLogic: 'sum',
+      aggregationField: aggregationField,
+      valuesToDisplay: 'raw-numbers',
       asyncData: [],
       fields: [],
-      rowFields: [{
-        getter: item => item.country,
-        label: 'Country'
-      }, {
-        getter: item => item.gender,
-        label: 'Gender',
-        headerSlotName: 'genderHeader'
-      }],
-      colFields: [{
-        getter: item => item.year,
-        label: 'Year'
-      }],
-      reducer: (sum, item) => sum + item.count,
+      rowFields: [],
+      colFields: [],
       defaultShowSettings: true,
       isDataLoading: false
     }
   },
   created: function() {
     this.isDataLoading = true
-    setTimeout(() => {
-      this.asyncData = data
-      this.isDataLoading = false
-    }, 3000)
+  
+    fetch(
+      'http://0.0.0.0:8888',
+      {
+        method: 'GET',
+        mode: 'cors',
+        cache: 'default',
+        headers: {
+          Accept: 'application/json'
+        }
+      }
+    )
+      .then(response => response.json())
+      .then(data => {
+        return new Promise(resolve => {
+          this.asyncData = Object.freeze(data)
+          resolve()
+        })
+      })
+      .then(() => {
+        this.isDataLoading = false
+        this.fields = this.createFields(Object.keys(this.asyncData[0]))
+      })
   },
   filters: {
     number: function(value) {
@@ -105,6 +116,16 @@ export default {
       return value.replace(/\b\w/g, l => l.toUpperCase())
     }
   },
+  methods: {
+    createFields(dataKeys) {
+      return dataKeys.map(dataKey => {
+        return {
+          getter: item => item[dataKey],
+          label: dataKey,
+        }
+      })
+    }
+  }
 }
 </script>
 

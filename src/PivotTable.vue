@@ -1,14 +1,6 @@
 <template>
   <div class="table-responsive">
-    <template v-if="isDataLoading">
-      <slot name="loading">
-        Loading...
-      </slot>
-    </template>
-    <div v-else-if="data.length === 0" class="alert alert-warning" role="alert">
-      {{ noDataWarningText }}
-    </div>
-    <table v-else class="table table-bordered">
+    <table class="table table-bordered">
       <!-- Table header -->
       <thead>
         <tr v-for="(colField, colFieldIndex) in colFields" :key="colField.key">
@@ -28,7 +20,7 @@
           </template>
           <!-- Top right cell -->
           <!-- NOTE: Customization -->
-          <td v-if="valuesToDisplay !== 'percentage-col-sum' && colFieldIndex === 0 && colFields.length > 0" :rowspan="colFields.length" class="summation">Row Sum<sup v-if="valuesToDisplay !== 'raw-numbers'">*</sup></td>
+          <td v-if="valuesToDisplay !== 'percentage-col-sum' && colFieldIndex === 0 && colFields.length > 0" :rowspan="colFields.length" class="summation">Row {{ aggregationLogic | capitalize }}<sup v-if="valuesToDisplay !== 'raw-numbers'">*</sup></td>
         </tr>
       </thead>
       <!-- Table body -->
@@ -66,7 +58,7 @@
       <tfoot v-if="valuesToDisplay !== 'percentage-row-sum' && rowFields.length > 0">
         <tr>
           <!-- Bottom left cell -->
-          <td :colspan="rowFields.length" class="summation">Column Sum<sup v-if="valuesToDisplay !== 'raw-numbers'">*</sup></td>
+          <td :colspan="rowFields.length" class="summation">Column {{ aggregationLogic | capitalize }}<sup v-if="valuesToDisplay !== 'raw-numbers'">*</sup></td>
           <!-- Column footers -->
           <td v-for="(colSum, index) in colSums" :key="`col-sum-${index}`" class="summation">
             <template v-if="valuesToDisplay === 'raw-numbers'">{{  colSum.toLocaleString() }}</template>
@@ -77,6 +69,7 @@
         </tr>
       </tfoot>
     </table>
+    <p v-if="data.length">The sample size is {{ data.length.toLocaleString() }}.</p>
     <p v-if="valuesToDisplay !=='raw-numbers'" class="text-muted"><sup>*</sup>Percentages may not add up to 100% due to rounding.</p>
   </div>
 </template>
@@ -106,10 +99,6 @@ export default {
       type: String,
       default: "No data to display."
     },
-    isDataLoading: {
-      type: Boolean,
-      default: false
-    },
     // NOTE: Customization
     valuesToDisplay: {
       type: String,
@@ -130,6 +119,13 @@ export default {
   data () {
     return {
       values: {} // Alas Vue does not support JS Map
+    }
+  },
+  filters: {
+    capitalize: function (value) {
+      if (!value) return ''
+      value = value.toString()
+      return value.charAt(0).toUpperCase() + value.slice(1)
     }
   },
   computed: {
@@ -296,19 +292,26 @@ export default {
         const rowData = this.filteredData({ data: this.data, rowFilters: row })
         this.cols.forEach(col => {
           const datasets = this.filteredData({ data: rowData, colFilters: col })
-          
           const key = JSON.stringify({ col, row })
           const aggregate = datasets.reduce(this.reducer, 0)
           const numberOfDatasets = datasets.length
-          
+          const allDatasetsAreNumbers = datasets.every(dataset => !Number.isNaN(Number(dataset[this.aggregationField])))
           const value = (
-            this.aggregationField === 'mean'
-              ? (
-                aggregate && numberOfDatasets // If `NaN`, return 0
-                  ? (aggregate / numberOfDatasets)
-                  : 0
+            this.aggregationLogic === 'count'
+              ? aggregate
+              : (
+                allDatasetsAreNumbers
+                  ? (
+                    this.aggregationLogic === 'mean'
+                      ? (
+                        aggregate && numberOfDatasets
+                          ? Math.round((aggregate / numberOfDatasets) * 10) / 10
+                          : NaN
+                      )
+                      : aggregate
+                  )
+                  : NaN
               )
-              : aggregate
           )
           this.values[key] = value
         })
@@ -328,13 +331,16 @@ export default {
                   .map(([key, value]) => value)
                   .reduce((aggregate, figure) => aggregate + figure, 0)
               )
-              let numberOfDatasets = aggregate.length
+              let numberOfDatasets = this[`${rowOrCol}s`].length
+  
+              console.log('aggregate', aggregate)
+              console.log('numberOfDatasets', numberOfDatasets)
   
               return (
-                this.aggregationField === 'mean'
+                this.aggregationLogic === 'mean'
                   ? (
-                    aggregate && numberOfDatasets // If `NaN`, return 0
-                      ? (aggregate / numberOfDatasets)
+                    aggregate && numberOfDatasets
+                      ? Math.round((aggregate / numberOfDatasets) * 10) / 10
                       : ''
                   )
                   : aggregate
