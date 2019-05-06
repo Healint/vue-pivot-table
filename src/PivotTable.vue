@@ -59,12 +59,12 @@
           <!-- Row footers (if slots are provided) -->
           <template v-if="colFields.length > 0">
             <template v-if="aggregationLogic === 'count'">
-              <td v-if="valuesToDisplay === 'raw-numbers'" class="summation">{{ rowSums[rowIndex].toLocaleString() }}</td>
+              <td v-if="valuesToDisplay === 'raw-numbers'" class="summation">{{ rowAggregates[rowIndex].toLocaleString() }}</td>
               <td v-else-if="valuesToDisplay === 'percentage-col-sum'" class="summation">{{ computeMean('row', rowIndex).toLocaleString() }}%</td>
               <td v-else-if="valuesToDisplay === 'percentage-row-sum'" class="summation">100%</td>
             </template>
             <template v-else>
-              <td class="summation">{{ rowSums[rowIndex].toLocaleString() }}</td>
+              <td class="summation">{{ rowAggregates[rowIndex].toLocaleString() }}</td>
             </template>
           </template>
         </tr>
@@ -82,7 +82,7 @@
             <td :colspan="rowFields.length" class="summation">Column {{ aggregationLogic | capitalize }}</td>
           </template>
           <!-- Column footers -->
-          <td v-for="(colSum, index) in colSums" :key="`col-sum-${index}`" class="summation">
+          <td v-for="(colSum, index) in colAggregates" :key="`col-sum-${index}`" class="summation">
             <template v-if="aggregationLogic === 'count'">
               <template v-if="valuesToDisplay === 'raw-numbers'">{{  colSum.toLocaleString() }}</template>
               <template v-else-if="valuesToDisplay === 'percentage-col-sum'">100%</template>
@@ -162,11 +162,11 @@ export default {
       return Object.entries(this.values)
     },
     // NOTE: Customization
-    colSums   () {
+    colAggregates   () {
       return this.computeChosenAggregates('col')
     },
     // NOTE: Customization
-    rowSums   () {
+    rowAggregates   () {
       return this.computeChosenAggregates('row')
     },
     // NOTE: Customization
@@ -363,7 +363,7 @@ export default {
                   .map(([key, value]) => value)
                   .reduce((aggregate, figure) => aggregate + figure, 0)
               )
-              let numberOfDatasets = this[`${rowOrCol}s`].length
+              let numberOfDatasets = this[`${rowOrCol === 'row' ? 'col' : 'row' }s`].length
   
   
               return (
@@ -401,7 +401,7 @@ export default {
               // Get all entries in the row or column
               .filter(([key, value]) => key.includes(reference))
               // Convert value to percentage: `* 100`
-              .map(([key, value]) => ({[key]: value / this[`${rowOrCol}Sums`][index] * 100}))
+              .map(([key, value]) => ({[key]: value / this[`${rowOrCol}Aggregates`][index] * 100}))
           })
           // Flatten the array
           .reduce((array, nestedArray) => [...array, ...nestedArray], [])
