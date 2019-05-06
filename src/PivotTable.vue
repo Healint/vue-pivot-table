@@ -74,7 +74,7 @@
       <tfoot v-if="rowFields.length > 0">
         <tr>
           <!-- Bottom left cell -->
-          <template v-if="aggregationLogic === 'raw-numbers'">
+          <template v-if="aggregationLogic === 'count'">
             <td v-if="valuesToDisplay !== 'percentage-row-sum'" :colspan="rowFields.length" class="summation">Column {{ aggregationLogic | capitalize }}<sup v-if="valuesToDisplay !== 'raw-numbers'">*</sup></td>
             <td v-else-if="valuesToDisplay === 'percentage-row-sum'" :colspan="rowFields.length" class="summation">Column Mean<sup v-if="valuesToDisplay !== 'raw-numbers'">*</sup></td>
           </template>
@@ -365,8 +365,6 @@ export default {
               )
               let numberOfDatasets = this[`${rowOrCol}s`].length
   
-              console.log('aggregate', aggregate)
-              console.log('numberOfDatasets', numberOfDatasets)
   
               return (
                 this.aggregationLogic === 'mean'

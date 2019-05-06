@@ -71,7 +71,7 @@ export default {
   components: { Pivot, PivotTable },
   data: () => {
     return {
-      aggregationLogic: 'count',
+      aggregationLogic: 'mean',
       aggregationField: aggregationFieldName,
       valuesToDisplay: 'percentage-row-sum',
       asyncData: [],
