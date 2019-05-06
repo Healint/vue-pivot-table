@@ -348,15 +348,6 @@ export default {
                   : 0
               )
           )
-          console.group('computeValues')
-          console.log('aggregate', aggregate)
-          console.log('allDatasetsAreNumbers', allDatasetsAreNumbers)
-          console.log('mean', aggregate / numberOfDatasets)
-          console.log(typeof aggregate)
-          console.log(typeof numberOfDatasets)
-          console.log('value', value)
-          console.log('numberOfDatasets', numberOfDatasets)
-          console.groupEnd('computeValues')
           this.values[key] = value
         })
       })
@@ -377,8 +368,6 @@ export default {
               )
               let numberOfDatasets = this[`${rowOrCol === 'row' ? 'col' : 'row' }s`].length
   
-              console.log('computeChosenAggregates—aggregate', aggregate)
-              console.log('computeChosenAggregates—numberOfDatasets', numberOfDatasets)
   
               return (
                 this.aggregationLogic === 'mean'
