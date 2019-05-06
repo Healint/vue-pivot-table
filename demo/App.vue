@@ -64,20 +64,28 @@
 import Pivot from '../src/Pivot'
 import PivotTable from '../src/PivotTable'
 
-const aggregationField = 'Sample'
+const aggregationFieldName = 'Sample'
 
 export default {
   name: 'app',
   components: { Pivot, PivotTable },
   data: () => {
     return {
-      aggregationLogic: 'sum',
-      aggregationField: aggregationField,
-      valuesToDisplay: 'raw-numbers',
+      aggregationLogic: 'count',
+      aggregationField: aggregationFieldName,
+      valuesToDisplay: 'percentage-row-sum',
       asyncData: [],
       fields: [],
       rowFields: [],
       colFields: [],
+      // reducer: (sum, item) => sum + 1,
+      reducer: (sum, item) => {
+        if (!Number.isNaN(Number(item[aggregationFieldName]))) {
+          return sum + item[aggregationFieldName];
+        } else {
+          return 0;
+        }
+      },
       defaultShowSettings: true,
       isDataLoading: false
     }

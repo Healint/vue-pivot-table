@@ -21,6 +21,7 @@
           <!-- Top right cell -->
           <!-- NOTE: Customization -->
           <td v-if="valuesToDisplay !== 'percentage-col-sum' && colFieldIndex === 0 && colFields.length > 0" :rowspan="colFields.length" class="summation">Row {{ aggregationLogic | capitalize }}<sup v-if="valuesToDisplay !== 'raw-numbers'">*</sup></td>
+          <td v-else-if="valuesToDisplay === 'percentage-col-sum' && colFieldIndex === 0 && colFields.length > 0" :rowspan="colFields.length" class="summation">Row Mean<sup v-if="valuesToDisplay !== 'raw-numbers'">*</sup></td>
         </tr>
       </thead>
       <!-- Table body -->
@@ -49,23 +50,27 @@
           <!-- Row footers (if slots are provided) -->
           <template v-if="colFields.length > 0">
             <td v-if="valuesToDisplay === 'raw-numbers'" class="summation">{{ rowSums[rowIndex].toLocaleString() }}</td>
+            <td v-else-if="valuesToDisplay === 'percentage-col-sum'" class="summation">{{ computeMean('row', rowIndex).toLocaleString() }}%</td>
             <td v-else-if="valuesToDisplay === 'percentage-row-sum'" class="summation">100%</td>
           </template>
         </tr>
       </tbody>
       <!-- NOTE: Customization -->
       <!-- Table footer -->
-      <tfoot v-if="valuesToDisplay !== 'percentage-row-sum' && rowFields.length > 0">
+      <tfoot v-if="rowFields.length > 0">
         <tr>
           <!-- Bottom left cell -->
-          <td :colspan="rowFields.length" class="summation">Column {{ aggregationLogic | capitalize }}<sup v-if="valuesToDisplay !== 'raw-numbers'">*</sup></td>
+          <td v-if="valuesToDisplay !== 'percentage-row-sum'" :colspan="rowFields.length" class="summation">Column {{ aggregationLogic | capitalize }}<sup v-if="valuesToDisplay !== 'raw-numbers'">*</sup></td>
+          <td v-else-if="valuesToDisplay === 'percentage-row-sum'" :colspan="rowFields.length" class="summation">Column Mean<sup v-if="valuesToDisplay !== 'raw-numbers'">*</sup></td>
           <!-- Column footers -->
           <td v-for="(colSum, index) in colSums" :key="`col-sum-${index}`" class="summation">
             <template v-if="valuesToDisplay === 'raw-numbers'">{{  colSum.toLocaleString() }}</template>
             <template v-else-if="valuesToDisplay === 'percentage-col-sum'">100%</template>
+            <template v-else-if="valuesToDisplay === 'percentage-row-sum'">{{ computeMean('col', index).toLocaleString() }}%</template>
+  
           </td>
           <!-- Bottom right dead cell -->
-          <td v-if="valuesToDisplay !== 'percentage-col-sum' && colFields.length > 0" class="summation"></td>
+          <td v-if="colFields.length > 0" class="summation" style="border-left: 2px solid #dee2e6;"></td>
         </tr>
       </tfoot>
     </table>
@@ -123,7 +128,7 @@ export default {
   },
   filters: {
     capitalize: function (value) {
-      if (!value) return ''
+      if (!value) { return '' }
       value = value.toString()
       return value.charAt(0).toUpperCase() + value.slice(1)
     }
@@ -306,11 +311,11 @@ export default {
                       ? (
                         aggregate && numberOfDatasets
                           ? Math.round((aggregate / numberOfDatasets) * 10) / 10
-                          : NaN
+                          : 0
                       )
                       : aggregate
                   )
-                  : NaN
+                  : 0
               )
           )
           this.values[key] = value
@@ -341,13 +346,24 @@ export default {
                   ? (
                     aggregate && numberOfDatasets
                       ? Math.round((aggregate / numberOfDatasets) * 10) / 10
-                      : ''
+                      : 0
                   )
                   : aggregate
               )
             }
           )
       )
+    },
+    computeMean (rowOrCol ,index) {
+      let reference = JSON.stringify(this[`${rowOrCol}s`][index])
+      let datasets = (
+        Object.entries(this[`values${rowOrCol == 'col' ? 'Row': 'Col'}Percentage`])
+          .filter(([key, value]) => key.includes(reference))
+      )
+      let aggregate = datasets.reduce((sum, [key, value]) => sum + value, 0)
+      let numberOfDatasets = datasets.length
+      
+      return Math.round(aggregate / numberOfDatasets * 10) / 10
     },
     // NOTE: Customization
     // Compute every cell as percentage of column or row
@@ -391,7 +407,7 @@ td {
   min-width: 6rem;
 }
 /* NOTE: Customizations */
-tfoot > tr > td:not(:last-child) {
+tfoot > tr > td {
   border-top: 2px solid #dee2e6;
   font-style: italic;
   text-align: right;
