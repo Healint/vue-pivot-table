@@ -21,12 +21,12 @@
           <!-- Top right cell -->
           <!-- NOTE: Customization -->
           <template v-if="colFieldIndex === 0 && colFields.length > 0">
-            <template v-if="aggregationLogic === 'raw-numbers'">
-              <td v-if="valuesToDisplay !== 'percentage-col-sum'" :rowspan="colFields.length" class="summation">Row {{ aggregationLogic | capitalize }}<sup v-if="valuesToDisplay !== 'raw-numbers'">*</sup></td>
-              <td v-else-if="valuesToDisplay === 'percentage-col-sum'" :rowspan="colFields.length" class="summation">Row Mean<sup v-if="valuesToDisplay !== 'raw-numbers'">*</sup></td>
+            <template v-if="aggregationLogic === 'count'">
+              <td v-if="valuesToDisplay !== 'percentage-col-sum'" :rowspan="colFields.length" class="summation">Row {{ aggregationLogic | capitalize }}<sup v-if="valuesToDisplay !== 'raw-numbers'">2</sup></td>
+              <td v-else-if="valuesToDisplay === 'percentage-col-sum'" :rowspan="colFields.length" class="summation">Row Mean<sup v-if="valuesToDisplay !== 'raw-numbers'">1</sup></td>
             </template>
             <template v-else>
-              <td :rowspan="colFields.length" class="summation">Row {{ aggregationLogic | capitalize }}</td>
+              <td :rowspan="colFields.length" class="summation">Row {{ aggregationLogic | capitalize }} <sup>*</sup></td>
             </template>
           </template>
         </tr>
@@ -75,11 +75,11 @@
         <tr>
           <!-- Bottom left cell -->
           <template v-if="aggregationLogic === 'count'">
-            <td v-if="valuesToDisplay !== 'percentage-row-sum'" :colspan="rowFields.length" class="summation">Column {{ aggregationLogic | capitalize }}<sup v-if="valuesToDisplay !== 'raw-numbers'">*</sup></td>
-            <td v-else-if="valuesToDisplay === 'percentage-row-sum'" :colspan="rowFields.length" class="summation">Column Mean<sup v-if="valuesToDisplay !== 'raw-numbers'">*</sup></td>
+            <td v-if="valuesToDisplay !== 'percentage-row-sum'" :colspan="rowFields.length" class="summation">Column {{ aggregationLogic | capitalize }} <sup v-if="valuesToDisplay !== 'raw-numbers'">2</sup></td>
+            <td v-else-if="valuesToDisplay === 'percentage-row-sum'" :colspan="rowFields.length" class="summation">Column Mean<sup v-if="valuesToDisplay !== 'raw-numbers'">1</sup></td>
           </template>
           <template v-else>
-            <td :colspan="rowFields.length" class="summation">Column {{ aggregationLogic | capitalize }}</td>
+            <td :colspan="rowFields.length" class="summation">Column {{ aggregationLogic | capitalize }} <sup>*</sup></td>
           </template>
           <!-- Column footers -->
           <td v-for="(colSum, index) in colAggregates" :key="`col-sum-${index}`" class="summation">
@@ -98,7 +98,9 @@
       </tfoot>
     </table>
     <p v-if="data.length">The sample size is {{ data.length.toLocaleString() }}.</p>
-    <p v-if="valuesToDisplay !=='raw-numbers'" class="text-muted"><sup>*</sup>Percentages may not add up to 100% due to rounding.</p>
+    <p v-if="aggregationLogic === 'count' && valuesToDisplay !=='raw-numbers'" class="text-muted"><sup>1</sup> Mean of percentages may have rounding error.</p>
+    <p v-if="aggregationLogic === 'count' && valuesToDisplay !=='raw-numbers'" class="text-muted"><sup>2</sup> Percentages may not add up to 100% due to rounding error.</p>
+    <p v-if="aggregationLogic === 'mean'" class="text-muted"><sup>*</sup>Column and row mean may not add up to 100% due to rounding error.</p>
   </div>
 </template>
 
