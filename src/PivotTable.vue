@@ -20,8 +20,15 @@
           </template>
           <!-- Top right cell -->
           <!-- NOTE: Customization -->
-          <td v-if="valuesToDisplay !== 'percentage-col-sum' && colFieldIndex === 0 && colFields.length > 0" :rowspan="colFields.length" class="summation">Row {{ aggregationLogic | capitalize }}<sup v-if="valuesToDisplay !== 'raw-numbers'">*</sup></td>
-          <td v-else-if="valuesToDisplay === 'percentage-col-sum' && colFieldIndex === 0 && colFields.length > 0" :rowspan="colFields.length" class="summation">Row Mean<sup v-if="valuesToDisplay !== 'raw-numbers'">*</sup></td>
+          <template v-if="colFieldIndex === 0 && colFields.length > 0">
+            <template v-if="aggregationLogic === 'raw-numbers'">
+              <td v-if="valuesToDisplay !== 'percentage-col-sum'" :rowspan="colFields.length" class="summation">Row {{ aggregationLogic | capitalize }}<sup v-if="valuesToDisplay !== 'raw-numbers'">*</sup></td>
+              <td v-else-if="valuesToDisplay === 'percentage-col-sum'" :rowspan="colFields.length" class="summation">Row Mean<sup v-if="valuesToDisplay !== 'raw-numbers'">*</sup></td>
+            </template>
+            <template v-else>
+              <td :rowspan="colFields.length" class="summation">Row {{ aggregationLogic | capitalize }}</td>
+            </template>
+          </template>
         </tr>
       </thead>
       <!-- Table body -->
@@ -42,16 +49,23 @@
           <!-- Values -->
           <td v-for="col in cols" :key="JSON.stringify(col)" class="text-right">
             <!-- NOTE: Customization -->
-            <slot v-if="$scopedSlots.value && valuesToDisplay === 'raw-numbers'" name="value" v-bind:value="displayedValues[JSON.stringify({ col, row })]" />
-            <slot v-else-if="$scopedSlots.value && valuesToDisplay !== 'raw-numbers'" name="value" v-bind:value="`${displayedValues[JSON.stringify({ col, row })].toFixed(1)}%`" />
-            <template v-else>{{ displayedValues[JSON.stringify({ col, row })] }}</template>
+            <template v-if="aggregationLogic === 'count'">
+              <slot v-if="$scopedSlots.value && valuesToDisplay === 'raw-numbers'" name="value" v-bind:value="displayedValues[JSON.stringify({ col, row })]" />
+              <slot v-else-if="$scopedSlots.value && valuesToDisplay !== 'raw-numbers'" name="value" v-bind:value="`${displayedValues[JSON.stringify({ col, row })].toFixed(1)}%`" />
+            </template>
+            <template v-else>{{ displayedValues[JSON.stringify({ col, row })].toLocaleString() }}</template>
           </td>
           <!-- NOTE: Customization -->
           <!-- Row footers (if slots are provided) -->
           <template v-if="colFields.length > 0">
-            <td v-if="valuesToDisplay === 'raw-numbers'" class="summation">{{ rowSums[rowIndex].toLocaleString() }}</td>
-            <td v-else-if="valuesToDisplay === 'percentage-col-sum'" class="summation">{{ computeMean('row', rowIndex).toLocaleString() }}%</td>
-            <td v-else-if="valuesToDisplay === 'percentage-row-sum'" class="summation">100%</td>
+            <template v-if="aggregationLogic === 'count'">
+              <td v-if="valuesToDisplay === 'raw-numbers'" class="summation">{{ rowSums[rowIndex].toLocaleString() }}</td>
+              <td v-else-if="valuesToDisplay === 'percentage-col-sum'" class="summation">{{ computeMean('row', rowIndex).toLocaleString() }}%</td>
+              <td v-else-if="valuesToDisplay === 'percentage-row-sum'" class="summation">100%</td>
+            </template>
+            <template v-else>
+              <td class="summation">{{ rowSums[rowIndex].toLocaleString() }}</td>
+            </template>
           </template>
         </tr>
       </tbody>
@@ -60,14 +74,23 @@
       <tfoot v-if="rowFields.length > 0">
         <tr>
           <!-- Bottom left cell -->
-          <td v-if="valuesToDisplay !== 'percentage-row-sum'" :colspan="rowFields.length" class="summation">Column {{ aggregationLogic | capitalize }}<sup v-if="valuesToDisplay !== 'raw-numbers'">*</sup></td>
-          <td v-else-if="valuesToDisplay === 'percentage-row-sum'" :colspan="rowFields.length" class="summation">Column Mean<sup v-if="valuesToDisplay !== 'raw-numbers'">*</sup></td>
+          <template v-if="aggregationLogic === 'raw-numbers'">
+            <td v-if="valuesToDisplay !== 'percentage-row-sum'" :colspan="rowFields.length" class="summation">Column {{ aggregationLogic | capitalize }}<sup v-if="valuesToDisplay !== 'raw-numbers'">*</sup></td>
+            <td v-else-if="valuesToDisplay === 'percentage-row-sum'" :colspan="rowFields.length" class="summation">Column Mean<sup v-if="valuesToDisplay !== 'raw-numbers'">*</sup></td>
+          </template>
+          <template v-else>
+            <td :colspan="rowFields.length" class="summation">Column {{ aggregationLogic | capitalize }}</td>
+          </template>
           <!-- Column footers -->
           <td v-for="(colSum, index) in colSums" :key="`col-sum-${index}`" class="summation">
-            <template v-if="valuesToDisplay === 'raw-numbers'">{{  colSum.toLocaleString() }}</template>
-            <template v-else-if="valuesToDisplay === 'percentage-col-sum'">100%</template>
-            <template v-else-if="valuesToDisplay === 'percentage-row-sum'">{{ computeMean('col', index).toLocaleString() }}%</template>
-  
+            <template v-if="aggregationLogic === 'count'">
+              <template v-if="valuesToDisplay === 'raw-numbers'">{{  colSum.toLocaleString() }}</template>
+              <template v-else-if="valuesToDisplay === 'percentage-col-sum'">100%</template>
+              <template v-else-if="valuesToDisplay === 'percentage-row-sum'">{{ computeMean('col', index).toLocaleString() }}%</template>
+            </template>
+            <template v-else>
+              <template>{{colSum.toLocaleString() }}</template>
+            </template>
           </td>
           <!-- Bottom right dead cell -->
           <td v-if="colFields.length > 0" class="summation" style="border-left: 2px solid #dee2e6;"></td>
@@ -152,13 +175,17 @@ export default {
     valuesRowPercentage () { return this.computePercentages('row') },
     // NOTE: Customization
     displayedValues () {
-      switch (this.valuesToDisplay) {
-        case "raw-numbers":
-          return this.values
-        case "percentage-col-sum":
-          return this.valuesColPercentage
-        case "percentage-row-sum":
-          return this.valuesRowPercentage
+      if (this.aggregationLogic === 'count') {
+        switch (this.valuesToDisplay) {
+          case "raw-numbers":
+            return this.values
+          case "percentage-col-sum":
+            return this.valuesColPercentage
+          case "percentage-row-sum":
+            return this.valuesRowPercentage
+        }
+      } else {
+        return this.values
       }
     },
     cols () {
