@@ -111,15 +111,15 @@ export default {
   props: {
     data: {
       type: Array,
-      default: []
+      default: () => []
     },
     rowFields: {
       type: Array,
-      default: []
+      default: () => []
     },
     colFields: {
       type: Array,
-      default: []
+      default: () => []
     },
     reducer: {
       type: Function,
@@ -127,7 +127,7 @@ export default {
     },
     noDataWarningText: {
       type: String,
-      default: "No data to display."
+      default: () => "No data to display."
     },
     // NOTE: Customization
     valuesToDisplay: {

@@ -87,19 +87,19 @@ export default {
   props: {
     data: {
       type: Array,
-      default: []
+      default: () => []
     },
     fields: {
       type: Array,
-      default: []
+      default: () => []
     },
     rowFields: {
       type: Array,
-      default: []
+      default: () => []
     },
     colFields: {
       type: Array,
-      default: []
+      default: () => []
     },
     reducer: {
       type: Function,
@@ -107,31 +107,31 @@ export default {
     },
     defaultShowSettings: {
       type: Boolean,
-      default: true
+      default: () => true
     },
     availableFieldsLabelText: {
       type: String,
-      default: 'Available fields'
+      default: () => 'Available fields'
     },
     colsLabelText: {
       type: String,
-      default: 'Columns'
+      default: () => 'Columns'
     },
     rowsLabelText: {
       type: String,
-      default: 'Rows'
+      default: () => 'Rows'
     },
     hideSettingsText: {
       type: String,
-      default: 'Hide settings'
+      default: () => 'Hide settings'
     },
     showSettingsText: {
       type: String,
-      default: 'Show settings'
+      default: () => 'Show settings'
     },
     noDataWarningText: {
       type: String,
-      default: 'No data to display.'
+      default: () => 'No data to display.'
     },
     // NOTE: Customization
     valuesToDisplay: {
