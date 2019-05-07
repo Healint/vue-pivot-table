@@ -63,7 +63,7 @@
       <!-- Table -->
       <div class="col table-responsive">
         <!-- NOTE: Customization -->
-        <pivot-table :data="data" :row-fields="internal.rowFields" :col-fields="internal.colFields" :reducer="reducer" :no-data-warning-text="noDataWarningText" :values-to-display="valuesToDisplay" :aggregation-logic="aggregationLogic" :aggregation-field="aggregationField">
+        <pivot-table :data="data" :row-fields="internal.rowFields" :col-fields="internal.colFields" :reducer="reducer" :no-data-warning-text="noDataWarningText" :values-to-display="valuesToDisplay" :aggregation-logic="aggregationLogic" :aggregation-field="aggregationField" :heatmap-mode="heatmapMode">
           <!-- pass down scoped slots -->
           <template v-for="(slot, slotName) in $scopedSlots" :slot="slotName" slot-scope="{ value }">
             <slot :name="slotName" v-bind="{ value }"></slot>
@@ -133,20 +133,22 @@ export default {
       type: String,
       default: () => 'No data to display.'
     },
-    // NOTE: Customization
     valuesToDisplay: {
       type: String,
       required: true
     },
-    // NOTE: Customization
     aggregationLogic: {
       type: String,
       required: true
     },
-    // NOTE: Customization
     aggregationField: {
       type: String,
       required: true
+    },
+    heatmapMode: {
+      type: String,
+      required: true,
+      default: () => 'table'
     }
   },
   data: function() {

@@ -11,6 +11,7 @@
         :row-fields="rowFields"
         :col-fields="colFields"
         :reducer="reducer"
+        :heatmap-mode="heatmapMode"
         :default-show-settings="defaultShowSettings"
         :values-to-display="valuesToDisplay"
         :aggregation-logic="aggregationLogic"
@@ -35,6 +36,7 @@
         :row-fields="rowFields"
         :col-fields="colFields"
         :reducer="reducer"
+        :heatmap-mode="heatmapMode"
         :default-show-settings="defaultShowSettings"
         :is-data-loading="isDataLoading"
         :values-to-display="valuesToDisplay"
@@ -71,7 +73,8 @@ export default {
   components: { Pivot, PivotTable },
   data: () => {
     return {
-      aggregationLogic: 'mean',
+      heatmapMode: 'table',
+      aggregationLogic: 'sum',
       aggregationField: aggregationFieldName,
       valuesToDisplay: 'percentage-row-sum',
       asyncData: [],

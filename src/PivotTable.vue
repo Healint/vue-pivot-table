@@ -46,12 +46,17 @@
               </template>
             </td>
           </template>
-          <!-- Values -->
-          <td v-for="col in cols" :key="JSON.stringify(col)" class="text-right">
+          <!-- Table values -->
+          <td v-for="col in cols" :key="JSON.stringify(col)" class="text-right" :style="{ 'background-color': heatmapMode !== 'off' && values.length > 0 ? heatmap[JSON.stringify({ col, row })] : 'initial' }">
             <!-- NOTE: Customization -->
-            <template v-if="aggregationLogic === 'count'">
-              <slot v-if="$scopedSlots.value && valuesToDisplay === 'raw-numbers'" name="value" v-bind:value="displayedValues[JSON.stringify({ col, row })]" />
-              <slot v-else-if="$scopedSlots.value && valuesToDisplay !== 'raw-numbers'" name="value" v-bind:value="`${displayedValues[JSON.stringify({ col, row })].toFixed(1)}%`" />
+            <template v-if="$scopedSlots.value">
+              <template v-if="aggregationLogic === 'count'">
+                <slot v-if="valuesToDisplay === 'raw-numbers'" name="value" v-bind:value="displayedValues[JSON.stringify({ col, row })]" />
+                <slot v-else-if="valuesToDisplay !== 'raw-numbers'" name="value" v-bind:value="`${displayedValues[JSON.stringify({ col, row })].toFixed(1)}%`" />
+              </template>
+              <template v-else>
+                <slot name="value" v-bind:value="displayedValues[JSON.stringify({ col, row })]" />
+              </template>
             </template>
             <template v-else>{{ displayedValues[JSON.stringify({ col, row })].toLocaleString() }}</template>
           </td>
@@ -98,8 +103,10 @@
       </tfoot>
     </table>
     <p v-if="data.length">The sample size is {{ data.length.toLocaleString() }}.</p>
-    <p v-if="aggregationLogic === 'count' && valuesToDisplay !=='raw-numbers'" class="text-muted"><sup>1</sup> Mean of percentages may have rounding error.</p>
-    <p v-if="aggregationLogic === 'count' && valuesToDisplay !=='raw-numbers'" class="text-muted"><sup>2</sup> Percentages may not add up to 100% due to rounding error.</p>
+    <template v-if="aggregationLogic === 'count' && valuesToDisplay !=='raw-numbers'">
+      <p class="text-muted"><sup>1</sup> Mean of percentages may have rounding error.</p>
+      <p class="text-muted"><sup>2</sup> Percentages may not add up to 100% due to rounding error.</p>
+    </template>
     <p v-if="aggregationLogic === 'mean'" class="text-muted"><sup>*</sup>Column and row mean may not add up to 100% due to rounding error.</p>
   </div>
 </template>
@@ -129,26 +136,49 @@ export default {
       type: String,
       default: () => "No data to display."
     },
-    // NOTE: Customization
     valuesToDisplay: {
       type: String,
       required: true,
       default: () => 'raw-numbers'
     },
-    // NOTE: Customization
     aggregationLogic: {
       type: String,
       required: true
     },
-    // NOTE: Customization
     aggregationField: {
       type: String,
       required: true
+    },
+    heatmapMode: {
+      type: String,
+      required: true,
+      default: () => 'table'
+    },
+    
+    colorGradations: {
+      type: Array,
+      required: false,
+      default () {
+        return Object.freeze(
+          [
+            'rgb(255,255,255)',
+            'rgb(255,243,243)',
+            'rgb(255,230,230)',
+            'rgb(255,216,216)',
+            'rgb(255,198,198)',
+            'rgb(255,178,178)',
+            'rgb(255,154,154)',
+            'rgb(255,122,122)',
+            'rgb(255,77,77)',
+            'rgb(255,0,0)'
+          ]
+        )
+      }
     }
   },
   data () {
     return {
-      values: {} // Alas Vue does not support JS Map
+      table: {} // Alas Vue does not support JS Map
     }
   },
   filters: {
@@ -159,35 +189,148 @@ export default {
     }
   },
   computed: {
-    // NOTE: Customization
-    entries () {
-      return Object.entries(this.values)
-    },
-    // NOTE: Customization
-    colAggregates   () {
-      return this.computeChosenAggregates('col')
-    },
-    // NOTE: Customization
-    rowAggregates   () {
-      return this.computeChosenAggregates('row')
-    },
-    // NOTE: Customization
+    values () { return Object.values(this.table) },
+    entries () { return Object.entries(this.table) },
+    colAggregates () { return this.computeChosenAggregates('col') },
+    rowAggregates () { return this.computeChosenAggregates('row') },
     valuesColPercentage () { return this.computePercentages('col') },
-    // NOTE: Customization
     valuesRowPercentage () { return this.computePercentages('row') },
-    // NOTE: Customization
+    // Compound property for watch single callback
+    colsAndRows () { return [this.cols, this.rows] },
+    maxTableValue () { return Math.max(...this.values) },
+    lastIndexOfColorGradation () { return this.colorGradations.length - 1 },
+    colReferences () { return this.cols.map(col => `"col":${JSON.stringify(col)}`) },
+    rowReferences () { return this.rows.map(row => `"row":${JSON.stringify(row)}`) },
+    maxColValues () {
+      return (
+        this.colReferences.map(
+          colReference => {
+            return (
+              Math.max(
+                ...this.entries
+                  .filter(([key, value]) => key.includes(colReference))
+                  .map(([key, value]) => value)
+              )
+            )
+          }
+        )
+      )
+    },
+    maxRowValues () {
+      return (
+        this.rowReferences.map(
+          rowReference => {
+            return (
+              Math.max(
+                ...this.entries
+                  .filter(([key, value]) => key.includes(rowReference))
+                  .map(([key, value]) => value)
+              )
+            )
+          }
+        )
+      )
+    },
+    heatmap () {
+      if (this.heatmapMode === 'off') { return null }
+      return this[`${this.heatmapMode}Heatmap`]
+    },
+    tableHeatmap () {
+      return (
+        this.entries
+          .map(
+            ([key, value]) => {
+              return { [key]: this.colorGradations[Math.round(value / this.maxTableValue * this.lastIndexOfColorGradation)] }
+            }
+          )
+          .reduce(
+            (entries, entry) => {
+              return { ...entries, ...entry,}
+            },
+            {}
+          )
+      )
+    },
+    colsHeatmap () {
+      return (
+        this.colReferences
+          .map(
+            (colReference, index) => {
+              return (
+                this.entries
+                  .filter(
+                    ([key, value]) => {
+                      return key.includes(colReference)
+                    }
+                  )
+                  .map(
+                    ([key, value]) => {
+                      return { [key]: this.colorGradations[Math.round(value / this.maxColValues[index] * this.lastIndexOfColorGradation)] }
+                    }
+                  )
+                  .reduce(
+                    (entries, entry) => {
+                      return { ...entries, ...entry,}
+                    },
+                    {}
+                  )
+              )
+            }
+          )
+          .reduce(
+            (table, colEntries) => {
+              return { ...colEntries, ...table}
+            },
+            {}
+          )
+      )
+    },
+    rowsHeatmap () {
+      return (
+        this.rowReferences
+          .map(
+            (rowReference, index) => {
+              return (
+                this.entries
+                  .filter(
+                    ([key, value]) => {
+                      return key.includes(rowReference)
+                    }
+                  )
+                  .map(
+                    ([key, value]) => {
+                      return { [key]: this.colorGradations[Math.round(value / this.maxRowValues[index] * this.lastIndexOfColorGradation)] }
+                    }
+                  )
+                  .reduce(
+                    (entries, entry) => {
+                      return { ...entries, ...entry,}
+                    },
+                    {}
+                  )
+              )
+            }
+          )
+          .reduce(
+            (table, rowEntries) => {
+              return { ...rowEntries, ...table}
+            },
+            {}
+          )
+      )
+    },
     displayedValues () {
       if (this.aggregationLogic === 'count') {
         switch (this.valuesToDisplay) {
           case "raw-numbers":
-            return this.values
+            return this.table
           case "percentage-col-sum":
             return this.valuesColPercentage
           case "percentage-row-sum":
             return this.valuesRowPercentage
         }
       } else {
-        return this.values
+        return this.table
       }
     },
     cols () {
@@ -250,10 +393,6 @@ export default {
 
       return rows
     },
-    // Compound property for watch single callback
-    colsAndRows () {
-      return [this.cols, this.rows]
-    }
   },
   methods: {
     // Get data filtered
@@ -319,7 +458,7 @@ export default {
     // Called when cols/rows have changed => recompute values
     computeValues () {
       // Remove old values
-      this.values = {}
+      this.table = {}
 
       // Compute new values
       this.rows.forEach(row => {
@@ -348,11 +487,10 @@ export default {
                   : 0
               )
           )
-          this.values[key] = value
+          this.table[key] = value
         })
       })
     },
-    // NOTE: Customization
     // Compute the chosen aggregate of columns or rows
     computeChosenAggregates (rowOrCol) {
       return (
@@ -382,6 +520,7 @@ export default {
           )
       )
     },
+    // Compute mean for rows when chosen aggregate is calculated for columns and vice-versa
     computeMean (rowOrCol ,index) {
       let reference = JSON.stringify(this[`${rowOrCol}s`][index])
       let datasets = (
@@ -393,7 +532,6 @@ export default {
       
       return Math.round(aggregate / numberOfDatasets * 10) / 10
     },
-    // NOTE: Customization
     // Compute every cell as percentage of column or row
     computePercentages (rowOrCol) {
       return (
@@ -422,6 +560,9 @@ export default {
     },
     aggregationLogic () {
       this.computeValues()
+    },
+    heatMapMode () {
+      this.computeValues()
     }
   },
   created () {
@@ -433,6 +574,7 @@ export default {
 <style scoped>
 td {
   min-width: 6rem;
+  padding: 0.45rem !important;
 }
 /* NOTE: Customizations */
 tfoot > tr > td {
