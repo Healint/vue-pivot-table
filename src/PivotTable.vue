@@ -3,14 +3,25 @@
     <table class="table table-bordered">
       <!-- Table header -->
       <thead>
-        <tr v-for="(colField, colFieldIndex) in colFields" :key="colField.key">
+        <tr
+          v-for="(colField, colFieldIndex) in colFields"
+          :key="colField.key">
           <!-- Top left dead cell -->
-          <th v-if="colFieldIndex === 0 && rowFields.length > 0" :colspan="rowFields.length" :rowspan="colFields.length"></th>
+          <th
+            v-if="colFieldIndex === 0 && rowFields.length > 0"
+            :colspan="rowFields.length"
+            :rowspan="colFields.length"/>
           <!-- Column headers -->
           <!-- NOTE: Customization -->
           <template v-for="(col, colIndex) in cols">
-            <th v-if="spanSize(cols, colFieldIndex, colIndex) !== 0" :key="JSON.stringify(col)" :colspan="spanSize(cols, colFieldIndex, colIndex)">
-              <slot v-if="colField.headerSlotName" :name="colField.headerSlotName" v-bind:value="col[colFieldIndex]">
+            <th
+              v-if="spanSize(cols, colFieldIndex, colIndex) !== 0"
+              :key="JSON.stringify(col)"
+              :colspan="spanSize(cols, colFieldIndex, colIndex)">
+              <slot
+                v-if="colField.headerSlotName"
+                :name="colField.headerSlotName"
+                :value="col[colFieldIndex]">
                 Missing slot <code>{{ colField.headerSlotName }}</code>
               </slot>
               <template v-else>
@@ -22,24 +33,47 @@
           <!-- NOTE: Customization -->
           <template v-if="colFieldIndex === 0 && colFields.length > 0">
             <template v-if="aggregationLogic === 'count'">
-              <td v-if="valuesToDisplay !== 'percentage-col-sum'" :rowspan="colFields.length" class="summation">Row {{ aggregationLogic | capitalize }}<sup v-if="valuesToDisplay !== 'raw-numbers'">2</sup></td>
-              <td v-else-if="valuesToDisplay === 'percentage-col-sum'" :rowspan="colFields.length" class="summation">Row Mean<sup v-if="valuesToDisplay !== 'raw-numbers'">1</sup></td>
+              <td
+                v-if="valuesToDisplay !== 'percentage-col-sum'"
+                :rowspan="colFields.length"
+                class="summation">
+                Row {{ aggregationLogic | capitalize }}<sup v-if="valuesToDisplay !== 'raw-numbers'">2</sup>
+              </td>
+              <td
+                v-else-if="valuesToDisplay === 'percentage-col-sum'"
+                :rowspan="colFields.length"
+                class="summation">
+                Row Mean<sup v-if="valuesToDisplay !== 'raw-numbers'">1</sup>
+              </td>
             </template>
             <template v-else>
-              <td :rowspan="colFields.length" class="summation">Row {{ aggregationLogic | capitalize }} <sup>*</sup></td>
+              <td
+                :rowspan="colFields.length"
+                class="summation">
+                Row {{ aggregationLogic | capitalize }} <sup>*</sup>
+              </td>
             </template>
           </template>
         </tr>
       </thead>
       <!-- Table body -->
       <tbody>
-        <tr v-for="(row, rowIndex) in rows" :key="JSON.stringify(row)">
+        <tr
+          v-for="(row, rowIndex) in rows"
+          :key="JSON.stringify(row)">
           <!-- Row headers -->
           <!-- NOTE: Customization -->
           <template v-for="(rowField, rowFieldIndex) in rowFields">
-            <td v-if="spanSize(rows, rowFieldIndex, rowIndex) !== 0" :key="rowField.key" :rowspan="spanSize(rows, rowFieldIndex, rowIndex)" class="font-weight-bold">
-              <slot v-if="rowField.headerSlotName" :name="rowField.headerSlotName" v-bind:value="row[rowFieldIndex]">
-                  Missing slot <code>{{ rowField.headerSlotName }}</code>
+            <td
+              v-if="spanSize(rows, rowFieldIndex, rowIndex) !== 0"
+              :key="rowField.key"
+              :rowspan="spanSize(rows, rowFieldIndex, rowIndex)"
+              class="font-weight-bold">
+              <slot
+                v-if="rowField.headerSlotName"
+                :name="rowField.headerSlotName"
+                :value="row[rowFieldIndex]">
+                Missing slot <code>{{ rowField.headerSlotName }}</code>
               </slot>
               <template v-else>
                 {{ row[rowFieldIndex] }}
@@ -47,29 +81,57 @@
             </td>
           </template>
           <!-- Table values -->
-          <td v-for="col in cols" :key="JSON.stringify(col)" class="text-right" :style="{ 'background-color': heatmapMode !== 'off' && values.length > 0 ? heatmap[JSON.stringify({ col, row })] : 'initial' }">
+          <td
+            v-for="col in cols"
+            :key="JSON.stringify(col)"
+            class="text-right"
+            :style="{ 'background-color': heatmapMode !== 'off' && values.length > 0 ? heatmap[JSON.stringify({ col, row })] : 'initial' }">
             <!-- NOTE: Customization -->
             <template v-if="$scopedSlots.value">
               <template v-if="aggregationLogic === 'count'">
-                <slot v-if="valuesToDisplay === 'raw-numbers'" name="value" v-bind:value="displayedValues[JSON.stringify({ col, row })]" />
-                <slot v-else-if="valuesToDisplay !== 'raw-numbers'" name="value" v-bind:value="`${displayedValues[JSON.stringify({ col, row })].toFixed(1)}%`" />
+                <slot
+                  v-if="valuesToDisplay === 'raw-numbers'"
+                  name="value"
+                  :value="displayedValues[JSON.stringify({ col, row })]"/>
+                <slot
+                  v-else-if="valuesToDisplay !== 'raw-numbers'"
+                  name="value"
+                  :value="`${displayedValues[JSON.stringify({ col, row })].toFixed(1)}%`"/>
               </template>
               <template v-else>
-                <slot name="value" v-bind:value="displayedValues[JSON.stringify({ col, row })]" />
+                <slot
+                  name="value"
+                  :value="displayedValues[JSON.stringify({ col, row })]"/>
               </template>
             </template>
-            <template v-else>{{ displayedValues[JSON.stringify({ col, row })].toLocaleString() }}</template>
+            <template v-else>
+              {{ displayedValues[JSON.stringify({ col, row })].toLocaleString() }}
+            </template>
           </td>
           <!-- NOTE: Customization -->
           <!-- Row footers (if slots are provided) -->
           <template v-if="colFields.length > 0">
             <template v-if="aggregationLogic === 'count'">
-              <td v-if="valuesToDisplay === 'raw-numbers'" class="summation">{{ rowAggregates[rowIndex].toLocaleString() }}</td>
-              <td v-else-if="valuesToDisplay === 'percentage-col-sum'" class="summation">{{ computeMean('row', rowIndex).toLocaleString() }}%</td>
-              <td v-else-if="valuesToDisplay === 'percentage-row-sum'" class="summation">100%</td>
+              <td
+                v-if="valuesToDisplay === 'raw-numbers'"
+                class="summation">
+                {{ rowAggregates[rowIndex].toLocaleString() }}
+              </td>
+              <td
+                v-else-if="valuesToDisplay === 'percentage-col-sum'"
+                class="summation">
+                {{ computeMean('row', rowIndex).toLocaleString() }}%
+              </td>
+              <td
+                v-else-if="valuesToDisplay === 'percentage-row-sum'"
+                class="summation">
+                100%
+              </td>
             </template>
             <template v-else>
-              <td class="summation">{{ rowAggregates[rowIndex].toLocaleString() }}</td>
+              <td class="summation">
+                {{ rowAggregates[rowIndex].toLocaleString() }}
+              </td>
             </template>
           </template>
         </tr>
@@ -80,39 +142,75 @@
         <tr>
           <!-- Bottom left cell -->
           <template v-if="aggregationLogic === 'count'">
-            <td v-if="valuesToDisplay !== 'percentage-row-sum'" :colspan="rowFields.length" class="summation">Column {{ aggregationLogic | capitalize }} <sup v-if="valuesToDisplay !== 'raw-numbers'">2</sup></td>
-            <td v-else-if="valuesToDisplay === 'percentage-row-sum'" :colspan="rowFields.length" class="summation">Column Mean<sup v-if="valuesToDisplay !== 'raw-numbers'">1</sup></td>
+            <td
+              v-if="valuesToDisplay !== 'percentage-row-sum'"
+              :colspan="rowFields.length"
+              class="summation">
+              Column {{ aggregationLogic | capitalize }} <sup v-if="valuesToDisplay !== 'raw-numbers'">2</sup>
+            </td>
+            <td
+              v-else-if="valuesToDisplay === 'percentage-row-sum'"
+              :colspan="rowFields.length"
+              class="summation">
+              Column Mean<sup v-if="valuesToDisplay !== 'raw-numbers'">1</sup>
+            </td>
           </template>
           <template v-else>
-            <td :colspan="rowFields.length" class="summation">Column {{ aggregationLogic | capitalize }} <sup>*</sup></td>
+            <td
+              :colspan="rowFields.length"
+              class="summation">
+              Column {{ aggregationLogic | capitalize }} <sup>*</sup>
+            </td>
           </template>
           <!-- Column footers -->
-          <td v-for="(colSum, index) in colAggregates" :key="`col-sum-${index}`" class="summation">
+          <td
+            v-for="(colSum, index) in colAggregates"
+            :key="`col-sum-${index}`"
+            class="summation">
             <template v-if="aggregationLogic === 'count'">
-              <template v-if="valuesToDisplay === 'raw-numbers'">{{  colSum.toLocaleString() }}</template>
-              <template v-else-if="valuesToDisplay === 'percentage-col-sum'">100%</template>
-              <template v-else-if="valuesToDisplay === 'percentage-row-sum'">{{ computeMean('col', index).toLocaleString() }}%</template>
+              <template v-if="valuesToDisplay === 'raw-numbers'">
+                {{ colSum.toLocaleString() }}
+              </template>
+              <template v-else-if="valuesToDisplay === 'percentage-col-sum'">
+                100%
+              </template>
+              <template v-else-if="valuesToDisplay === 'percentage-row-sum'">
+                {{ computeMean('col', index).toLocaleString() }}%
+              </template>
             </template>
             <template v-else>
-              <template>{{colSum.toLocaleString() }}</template>
+              <template>{{ colSum.toLocaleString() }}</template>
             </template>
           </td>
           <!-- Bottom right dead cell -->
-          <td v-if="colFields.length > 0" class="summation" style="border-left: 2px solid #dee2e6;"></td>
+          <td
+            v-if="colFields.length > 0"
+            class="summation"
+            style="border-left: 2px solid #dee2e6;"/>
         </tr>
       </tfoot>
     </table>
-    <p v-if="data.length">The sample size is {{ data.length.toLocaleString() }}.</p>
+    <p v-if="data.length">
+      The sample size is {{ data.length.toLocaleString() }}.
+    </p>
     <template v-if="aggregationLogic === 'count' && valuesToDisplay !=='raw-numbers'">
-      <p class="text-muted"><sup>1</sup> Mean of percentages may have rounding error.</p>
-      <p class="text-muted"><sup>2</sup> Percentages may not add up to 100% due to rounding error.</p>
+      <p class="text-muted">
+        <sup>1</sup> Mean of percentages may have rounding error.
+      </p>
+      <p class="text-muted">
+        <sup>2</sup> Percentages may not add up to 100% due to rounding error.
+      </p>
     </template>
-    <p v-if="aggregationLogic === 'mean'" class="text-muted"><sup>*</sup>Column and row mean may not add up to 100% due to rounding error.</p>
+    <p
+      v-if="aggregationLogic === 'mean'"
+      class="text-muted">
+      <sup>*</sup>Column and row mean may not add up to 100% due to rounding error.
+    </p>
   </div>
 </template>
 
 <script>
-import naturalSort from "javascript-natural-sort"
+import naturalSort from 'javascript-natural-sort'
 
 export default {
   props: {
@@ -134,7 +232,7 @@ export default {
     },
     noDataWarningText: {
       type: String,
-      default: () => "No data to display."
+      default: () => 'No data to display.'
     },
     valuesToDisplay: {
       type: String,
@@ -154,7 +252,7 @@ export default {
       required: true,
       default: () => 'table'
     },
-    
+
     colorGradations: {
       type: Array,
       required: false,
@@ -245,7 +343,7 @@ export default {
           )
           .reduce(
             (entries, entry) => {
-              return { ...entries, ...entry,}
+              return { ...entries, ...entry }
             },
             {}
           )
@@ -270,7 +368,7 @@ export default {
                   )
                   .reduce(
                     (entries, entry) => {
-                      return { ...entries, ...entry,}
+                      return { ...entries, ...entry }
                     },
                     {}
                   )
@@ -279,7 +377,7 @@ export default {
           )
           .reduce(
             (table, colEntries) => {
-              return { ...colEntries, ...table}
+              return { ...colEntries, ...table }
             },
             {}
           )
@@ -304,7 +402,7 @@ export default {
                   )
                   .reduce(
                     (entries, entry) => {
-                      return { ...entries, ...entry,}
+                      return { ...entries, ...entry }
                     },
                     {}
                   )
@@ -313,7 +411,7 @@ export default {
           )
           .reduce(
             (table, rowEntries) => {
-              return { ...rowEntries, ...table}
+              return { ...rowEntries, ...table }
             },
             {}
           )
@@ -322,11 +420,11 @@ export default {
     displayedValues () {
       if (this.aggregationLogic === 'count') {
         switch (this.valuesToDisplay) {
-          case "raw-numbers":
+          case 'raw-numbers':
             return this.table
-          case "percentage-col-sum":
+          case 'percentage-col-sum':
             return this.valuesColPercentage
-          case "percentage-row-sum":
+          case 'percentage-row-sum':
             return this.valuesRowPercentage
         }
       } else {
@@ -392,13 +490,13 @@ export default {
       }
 
       return rows
-    },
+    }
   },
   methods: {
     // Get data filtered
     filteredData ({ data = [], colFilters = {}, rowFilters = {} }) {
       // Prepare getters
-      const colGetters = {}, rowGetters = {}
+      const colGetters = {}; const rowGetters = {}
 
       for (const depth in colFilters) {
         colGetters[depth] = this.colFields[depth].getter
@@ -469,7 +567,7 @@ export default {
           const aggregate = datasets.reduce(this.reducer, 0)
           const numberOfDatasets = datasets.length
           // const allDatasetsAreNumbers = datasets.every(dataset => !Number.isNaN(Number(dataset[this.aggregationField])))
-          const allDatasetsAreNumbers = datasets.every(dataset => typeof(dataset[this.aggregationField]) !== 'string')
+          const allDatasetsAreNumbers = datasets.every(dataset => typeof (dataset[this.aggregationField]) !== 'string')
           const value = (
             this.aggregationLogic === 'count'
               ? aggregate
@@ -487,6 +585,15 @@ export default {
                   : 0
               )
           )
+          // console.group('computeValues')
+          // console.log('aggregate', aggregate)
+          // console.log('allDatasetsAreNumbers', allDatasetsAreNumbers)
+          // console.log('mean', aggregate / numberOfDatasets)
+          // console.log(typeof aggregate)
+          // console.log(typeof numberOfDatasets)
+          // console.log('value', value)
+          // console.log('numberOfDatasets', numberOfDatasets)
+          // console.groupEnd('computeValues')
           this.table[key] = value
         })
       })
@@ -504,9 +611,11 @@ export default {
                   .map(([key, value]) => value)
                   .reduce((aggregate, figure) => aggregate + figure, 0)
               )
-              let numberOfDatasets = this[`${rowOrCol === 'row' ? 'col' : 'row' }s`].length
-  
-  
+              let numberOfDatasets = this[`${rowOrCol === 'row' ? 'col' : 'row'}s`].length
+
+              // console.log('computeChosenAggregates—aggregate', aggregate)
+              // console.log('computeChosenAggregates—numberOfDatasets', numberOfDatasets)
+
               return (
                 this.aggregationLogic === 'mean'
                   ? (
@@ -521,15 +630,15 @@ export default {
       )
     },
     // Compute mean for rows when chosen aggregate is calculated for columns and vice-versa
-    computeMean (rowOrCol ,index) {
+    computeMean (rowOrCol, index) {
       let reference = JSON.stringify(this[`${rowOrCol}s`][index])
       let datasets = (
-        Object.entries(this[`values${rowOrCol == 'col' ? 'Row': 'Col'}Percentage`])
+        Object.entries(this[`values${rowOrCol == 'col' ? 'Row' : 'Col'}Percentage`])
           .filter(([key, value]) => key.includes(reference))
       )
       let aggregate = datasets.reduce((sum, [key, value]) => sum + value, 0)
       let numberOfDatasets = datasets.length
-      
+
       return Math.round(aggregate / numberOfDatasets * 10) / 10
     },
     // Compute every cell as percentage of column or row
@@ -542,14 +651,14 @@ export default {
               // Get all entries in the row or column
               .filter(([key, value]) => key.includes(reference))
               // Convert value to percentage: `* 100`
-              .map(([key, value]) => ({[key]: value / this[`${rowOrCol}Aggregates`][index] * 100}))
+              .map(([key, value]) => ({ [key]: value / this[`${rowOrCol}Aggregates`][index] * 100 }))
           })
           // Flatten the array
           .reduce((array, nestedArray) => [...array, ...nestedArray], [])
           // Convert to object literal
           .reduce((datasets, dataset) => ({ ...datasets, ...dataset }), {})
       )
-    },
+    }
   },
   watch: {
     colsAndRows () {
@@ -577,6 +686,7 @@ td {
   padding: 0.45rem !important;
 }
 /* NOTE: Customizations */
+/*tfoot > tr > td:not(:last-child) {*/
 tfoot > tr > td {
   border-top: 2px solid #dee2e6;
   font-style: italic;

@@ -1,20 +1,44 @@
 <template>
   <div>
     <!-- Top row -->
-    <div v-if="showSettings" class="row grid-x flex-nowrap mb-4">
+    <div
+      v-if="showSettings"
+      class="row grid-x flex-nowrap mb-4">
       <div class="col left-col">
-        <button class="btn btn-outline-primary" @click="toggleShowSettings">
+        <button
+          class="btn btn-outline-primary"
+          @click="toggleShowSettings">
           {{ hideSettingsText }}
         </button>
       </div>
 
       <!-- Disabled fields -->
       <div class="col">
-        <div class="drag-area-label">{{ availableFieldsLabelText }}</div>
-        <draggable v-model="internal.fields" class="d-flex flex-row drag-area flex-wrap" :class="dragAreaClass" :options="{ group: 'fields' }" @start="start" @end="end">
-          <div v-for="field in internal.fields" :key="field.key">
+        <div class="drag-area-label">
+          {{ availableFieldsLabelText }}
+        </div>
+        <draggable
+          v-model="internal.fields"
+          class="d-flex flex-row drag-area flex-wrap"
+          :class="dragAreaClass"
+          :options="{ group: 'fields' }"
+          @start="start"
+          @end="end">
+          <div
+            v-for="field in internal.fields"
+            :key="field.key">
             <div class="btn btn-draggable btn-secondary">
-              <svg aria-hidden="true" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 270 512" class="svg-inline--fa fa-grip-vertical fa-w-10"><path fill="currentColor" d="M64 208c26.5 0 48 21.5 48 48s-21.5 48-48 48-48-21.5-48-48 21.5-48 48-48zM16 104c0 26.5 21.5 48 48 48s48-21.5 48-48-21.5-48-48-48-48 21.5-48 48zm0 304c0 26.5 21.5 48 48 48s48-21.5 48-48-21.5-48-48-48-48 21.5-48 48z M204 208c26.5 0 48 21.5 48 48s-21.5 48 -48 48 -48 -21.5 -48 -48 21.5 -48 48 -48zM156 104c0 26.5 21.5 48 48 48s48 -21.5 48 -48 -21.5 -48 -48 -48 -48 21.5 -48 48zm0 304c0 26.5 21.5 48 48 48s48 -21.5 48 -48 -21.5 -48 -48 -48 -48 21.5 -48 48z" class=""></path></svg>
+              <svg
+                aria-hidden="true"
+                role="img"
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 270 512"
+                class="svg-inline--fa fa-grip-vertical fa-w-10">
+                <path
+                  fill="currentColor"
+                  d="M64 208c26.5 0 48 21.5 48 48s-21.5 48-48 48-48-21.5-48-48 21.5-48 48-48zM16 104c0 26.5 21.5 48 48 48s48-21.5 48-48-21.5-48-48-48-48 21.5-48 48zm0 304c0 26.5 21.5 48 48 48s48-21.5 48-48-21.5-48-48-48-48 21.5-48 48z M204 208c26.5 0 48 21.5 48 48s-21.5 48 -48 48 -48 -21.5 -48 -48 21.5 -48 48 -48zM156 104c0 26.5 21.5 48 48 48s48 -21.5 48 -48 -21.5 -48 -48 -48 -48 21.5 -48 48zm0 304c0 26.5 21.5 48 48 48s48 -21.5 48 -48 -21.5 -48 -48 -48 -48 21.5 -48 48z"
+                  class=""/>
+              </svg>
               {{ field.label }}
             </div>
           </div>
@@ -22,23 +46,49 @@
       </div>
     </div>
 
-    <div class="mb-4" v-else>
-      <button class="btn btn-outline-primary" @click="toggleShowSettings">
+    <div
+      class="mb-4"
+      v-else>
+      <button
+        class="btn btn-outline-primary"
+        @click="toggleShowSettings">
         {{ showSettingsText }}
       </button>
     </div>
 
-    <div class="row grid-x mb-4" v-if="showSettings">
+    <div
+      class="row grid-x mb-4"
+      v-if="showSettings">
       <!-- Top left zone - TODO: renderer select menu -->
-      <div class="col left-col"></div>
+      <div class="col left-col"/>
 
       <!-- Horizontal fields -->
       <div class="col">
-        <div class="drag-area-label">{{ colsLabelText }}</div>
-        <draggable v-model="internal.colFields" :options="{ group: 'fields' }" @start="start" @end="end" class="d-flex flex-row drag-area border-primary" :class="dragAreaClass">
-          <div v-for="field in internal.colFields" :key="field.key">
+        <div class="drag-area-label">
+          {{ colsLabelText }}
+        </div>
+        <draggable
+          v-model="internal.colFields"
+          :options="{ group: 'fields' }"
+          @start="start"
+          @end="end"
+          class="d-flex flex-row drag-area border-primary"
+          :class="dragAreaClass">
+          <div
+            v-for="field in internal.colFields"
+            :key="field.key">
             <div class="btn btn-draggable btn-primary">
-              <svg aria-hidden="true" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 270 512" class="svg-inline--fa fa-grip-vertical fa-w-10"><path fill="currentColor" d="M64 208c26.5 0 48 21.5 48 48s-21.5 48-48 48-48-21.5-48-48 21.5-48 48-48zM16 104c0 26.5 21.5 48 48 48s48-21.5 48-48-21.5-48-48-48-48 21.5-48 48zm0 304c0 26.5 21.5 48 48 48s48-21.5 48-48-21.5-48-48-48-48 21.5-48 48z M204 208c26.5 0 48 21.5 48 48s-21.5 48 -48 48 -48 -21.5 -48 -48 21.5 -48 48 -48zM156 104c0 26.5 21.5 48 48 48s48 -21.5 48 -48 -21.5 -48 -48 -48 -48 21.5 -48 48zm0 304c0 26.5 21.5 48 48 48s48 -21.5 48 -48 -21.5 -48 -48 -48 -48 21.5 -48 48z" class=""></path></svg>
+              <svg
+                aria-hidden="true"
+                role="img"
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 270 512"
+                class="svg-inline--fa fa-grip-vertical fa-w-10">
+                <path
+                  fill="currentColor"
+                  d="M64 208c26.5 0 48 21.5 48 48s-21.5 48-48 48-48-21.5-48-48 21.5-48 48-48zM16 104c0 26.5 21.5 48 48 48s48-21.5 48-48-21.5-48-48-48-48 21.5-48 48zm0 304c0 26.5 21.5 48 48 48s48-21.5 48-48-21.5-48-48-48-48 21.5-48 48z M204 208c26.5 0 48 21.5 48 48s-21.5 48 -48 48 -48 -21.5 -48 -48 21.5 -48 48 -48zM156 104c0 26.5 21.5 48 48 48s48 -21.5 48 -48 -21.5 -48 -48 -48 -48 21.5 -48 48zm0 304c0 26.5 21.5 48 48 48s48 -21.5 48 -48 -21.5 -48 -48 -48 -48 21.5 -48 48z"
+                  class=""/>
+              </svg>
               {{ field.label }}
             </div>
           </div>
@@ -48,12 +98,34 @@
 
     <div class="row flex-nowrap grid-x">
       <!-- Vertical fields -->
-      <div class="col left-col" v-if="showSettings">
-        <div class="drag-area-label">{{ rowsLabelText }}</div>
-        <draggable v-model="internal.rowFields" :options="{ group: 'fields' }" @start="start" @end="end" class="d-flex flex-column align-items-start drag-area border-primary" :class="dragAreaClass">
-          <div v-for="field in internal.rowFields" :key="field.key">
+      <div
+        class="col left-col"
+        v-if="showSettings">
+        <div class="drag-area-label">
+          {{ rowsLabelText }}
+        </div>
+        <draggable
+          v-model="internal.rowFields"
+          :options="{ group: 'fields' }"
+          @start="start"
+          @end="end"
+          class="d-flex flex-column align-items-start drag-area border-primary"
+          :class="dragAreaClass">
+          <div
+            v-for="field in internal.rowFields"
+            :key="field.key">
             <div class="btn btn-draggable btn-primary">
-              <svg aria-hidden="true" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 270 512" class="svg-inline--fa fa-grip-vertical fa-w-10"><path fill="currentColor" d="M64 208c26.5 0 48 21.5 48 48s-21.5 48-48 48-48-21.5-48-48 21.5-48 48-48zM16 104c0 26.5 21.5 48 48 48s48-21.5 48-48-21.5-48-48-48-48 21.5-48 48zm0 304c0 26.5 21.5 48 48 48s48-21.5 48-48-21.5-48-48-48-48 21.5-48 48z M204 208c26.5 0 48 21.5 48 48s-21.5 48 -48 48 -48 -21.5 -48 -48 21.5 -48 48 -48zM156 104c0 26.5 21.5 48 48 48s48 -21.5 48 -48 -21.5 -48 -48 -48 -48 21.5 -48 48zm0 304c0 26.5 21.5 48 48 48s48 -21.5 48 -48 -21.5 -48 -48 -48 -48 21.5 -48 48z" class=""></path></svg>
+              <svg
+                aria-hidden="true"
+                role="img"
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 270 512"
+                class="svg-inline--fa fa-grip-vertical fa-w-10">
+                <path
+                  fill="currentColor"
+                  d="M64 208c26.5 0 48 21.5 48 48s-21.5 48-48 48-48-21.5-48-48 21.5-48 48-48zM16 104c0 26.5 21.5 48 48 48s48-21.5 48-48-21.5-48-48-48-48 21.5-48 48zm0 304c0 26.5 21.5 48 48 48s48-21.5 48-48-21.5-48-48-48-48 21.5-48 48z M204 208c26.5 0 48 21.5 48 48s-21.5 48 -48 48 -48 -21.5 -48 -48 21.5 -48 48 -48zM156 104c0 26.5 21.5 48 48 48s48 -21.5 48 -48 -21.5 -48 -48 -48 -48 21.5 -48 48zm0 304c0 26.5 21.5 48 48 48s48 -21.5 48 -48 -21.5 -48 -48 -48 -48 21.5 -48 48z"
+                  class=""/>
+              </svg>
               {{ field.label }}
             </div>
           </div>
@@ -63,13 +135,27 @@
       <!-- Table -->
       <div class="col table-responsive">
         <!-- NOTE: Customization -->
-        <pivot-table :data="data" :row-fields="internal.rowFields" :col-fields="internal.colFields" :reducer="reducer" :no-data-warning-text="noDataWarningText" :values-to-display="valuesToDisplay" :aggregation-logic="aggregationLogic" :aggregation-field="aggregationField" :heatmap-mode="heatmapMode">
+        <pivot-table
+          :data="data"
+          :row-fields="internal.rowFields"
+          :col-fields="internal.colFields"
+          :reducer="reducer"
+          :no-data-warning-text="noDataWarningText"
+          :values-to-display="valuesToDisplay"
+          :aggregation-logic="aggregationLogic"
+          :aggregation-field="aggregationField"
+          :heatmap-mode="heatmapMode">
           <!-- pass down scoped slots -->
-          <template v-for="(slot, slotName) in $scopedSlots" :slot="slotName" slot-scope="{ value }">
-            <slot :name="slotName" v-bind="{ value }"></slot>
+          <template
+            v-for="(slot, slotName) in $scopedSlots"
+            :slot="slotName"
+            slot-scope="{ value }">
+            <slot
+              :name="slotName"
+              v-bind="{ value }"/>
           </template>
           <template slot="loading">
-            <slot name="loading"></slot>
+            <slot name="loading"/>
           </template>
         </pivot-table>
       </div>
@@ -82,7 +168,7 @@ import PivotTable from './PivotTable'
 import Draggable from 'vuedraggable'
 
 export default {
-  name: 'vue-pivot',
+  name: 'VuePivot',
   components: { PivotTable, Draggable },
   props: {
     data: {
@@ -151,7 +237,7 @@ export default {
       default: () => 'table'
     }
   },
-  data: function() {
+  data: function () {
     return {
       internal: {
         fields: this.fields,
@@ -163,24 +249,52 @@ export default {
     }
   },
   computed: {
-    dragAreaClass: function() {
+    dragAreaClass: function () {
       return this.dragging ? 'drag-area-highlight' : null
     }
   },
   methods: {
-    toggleShowSettings: function() {
+    toggleShowSettings: function () {
       this.showSettings = !this.showSettings
     },
-    start: function() {
+    start: function () {
       this.dragging = true
     },
-    end: function() {
+    end: function () {
       this.dragging = false
     }
   },
-  created: function() {
+  created: function () {
     this.showSettings = this.defaultShowSettings
   },
+  // NOTE: START—Development Only. Do not commit
+  watch: {
+    fields: {
+      handler (newValue) {
+        if (newValue.length) {
+          this.internal.fields = this.fields
+        }
+      },
+      immediate: true
+    },
+    rowFields: {
+      handler (newValue) {
+        if (newValue.length) {
+          this.internal.rowFields = this.rowFields
+        }
+      },
+      immediate: true
+    },
+    colFields: {
+      handler (newValue) {
+        if (newValue.length) {
+          this.internal.colFields = this.colFields
+        }
+      },
+      immediate: true
+    }
+  }
+  // NOTE: END—Development Only. Do not commit
 }
 </script>
 
