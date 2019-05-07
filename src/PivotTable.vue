@@ -85,7 +85,7 @@
             v-for="col in cols"
             :key="JSON.stringify(col)"
             class="text-right"
-            :style="{ 'background-color': heatmapMode !== 'off' && values.length > 0 ? heatmap[JSON.stringify({ col, row })] : 'initial' }">
+            :style="{ 'background-color': heatmapMode !== 'off' && values.length > 1 ? heatmap[JSON.stringify({ col, row })] : 'unset' }">
             <!-- NOTE: Customization -->
             <template v-if="$scopedSlots.value">
               <template v-if="aggregationLogic === 'count'">
