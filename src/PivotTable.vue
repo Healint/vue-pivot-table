@@ -296,6 +296,7 @@ export default {
     // Compound property for watch single callback
     colsAndRows () { return [this.cols, this.rows] },
     maxTableValue () { return Math.max(...this.values) },
+    minTableValue () { return Math.min(...this.values) },
     lastIndexOfColorGradation () { return this.colorGradations.length - 1 },
     colReferences () { return this.cols.map(col => `"col":${JSON.stringify(col)}`) },
     rowReferences () { return this.rows.map(row => `"row":${JSON.stringify(row)}`) },
@@ -305,6 +306,21 @@ export default {
           colReference => {
             return (
               Math.max(
+                ...this.entries
+                  .filter(([key, value]) => key.includes(colReference))
+                  .map(([key, value]) => value)
+              )
+            )
+          }
+        )
+      )
+    },
+    minColValues () {
+      return (
+        this.colReferences.map(
+          colReference => {
+            return (
+              Math.min(
                 ...this.entries
                   .filter(([key, value]) => key.includes(colReference))
                   .map(([key, value]) => value)
@@ -329,6 +345,21 @@ export default {
         )
       )
     },
+    minRowValues () {
+      return (
+        this.rowReferences.map(
+          rowReference => {
+            return (
+              Math.min(
+                ...this.entries
+                  .filter(([key, value]) => key.includes(rowReference))
+                  .map(([key, value]) => value)
+              )
+            )
+          }
+        )
+      )
+    },
     heatmap () {
       if (this.heatmapMode === 'off') { return null }
       return this[`${this.heatmapMode}Heatmap`]
@@ -338,7 +369,7 @@ export default {
         this.entries
           .map(
             ([key, value]) => {
-              return { [key]: this.colorGradations[Math.round(value / this.maxTableValue * this.lastIndexOfColorGradation)] }
+              return { [key]: this.colorGradations[Math.round(Math.abs(value) / (this.maxTableValue - this.minTableValue) * this.lastIndexOfColorGradation)] }
             }
           )
           .reduce(
@@ -363,7 +394,7 @@ export default {
                   )
                   .map(
                     ([key, value]) => {
-                      return { [key]: this.colorGradations[Math.round(value / this.maxColValues[index] * this.lastIndexOfColorGradation)] }
+                      return { [key]: this.colorGradations[Math.round(Math.abs(value) / (this.maxColValues[index] - this.minColValues[index]) * this.lastIndexOfColorGradation)] }
                     }
                   )
                   .reduce(
@@ -397,7 +428,7 @@ export default {
                   )
                   .map(
                     ([key, value]) => {
-                      return { [key]: this.colorGradations[Math.round(value / this.maxRowValues[index] * this.lastIndexOfColorGradation)] }
+                      return { [key]: this.colorGradations[Math.round(Math.abs(value) / (this.maxRowValues[index] - this.minRowValues[index]) * this.lastIndexOfColorGradation)] }
                     }
                   )
                   .reduce(
