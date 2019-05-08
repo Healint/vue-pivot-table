@@ -710,7 +710,6 @@ td {
   min-width: 6rem;
   padding: 0.45rem !important;
 }
-/* NOTE: Customizations */
 /*tfoot > tr > td:not(:last-child) {*/
 tfoot > tr > td {
   border-top: 2px solid #dee2e6;

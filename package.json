@@ -17,7 +17,13 @@
     "url": "https://github.com/Healint/vue-pivot-table"
   },
   "main": "dist/vue-pivot-table.js",
-  "browser": "dist/vue-pivot-table.browser.js",
+  "browser": {
+    "./DynamicPivotTable": "src/Pivot.vue",
+    "./StaticPivotTable": "src/PivotTable.vue",
+    "./index.js": "src/browser.js",
+    "./vue-pivot-table.js": "dist/vue-pivot-table.browser.js"
+  },
+  "module": "src/browser.js",
   "scripts": {
     "dev": "webpack-dev-server --progress",
     "build": "npm run build:lib & npm run build:browser",
