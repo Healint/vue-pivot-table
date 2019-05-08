@@ -134,7 +134,6 @@
 
       <!-- Table -->
       <div class="col table-responsive">
-        <!-- NOTE: Customization -->
         <pivot-table
           :data="data"
           :row-fields="internal.rowFields"
@@ -154,9 +153,6 @@
               :name="slotName"
               v-bind="{ value }"/>
           </template>
-          <template slot="loading">
-            <slot name="loading"/>
-          </template>
         </pivot-table>
       </div>
     </div>
@@ -168,7 +164,6 @@ import PivotTable from './PivotTable'
 import Draggable from 'vuedraggable'
 
 export default {
-  name: 'VuePivot',
   components: { PivotTable, Draggable },
   props: {
     data: {

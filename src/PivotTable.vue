@@ -12,7 +12,6 @@
             :colspan="rowFields.length"
             :rowspan="colFields.length"/>
           <!-- Column headers -->
-          <!-- NOTE: Customization -->
           <template v-for="(col, colIndex) in cols">
             <th
               v-if="spanSize(cols, colFieldIndex, colIndex) !== 0"
@@ -30,7 +29,6 @@
             </th>
           </template>
           <!-- Top right cell -->
-          <!-- NOTE: Customization -->
           <template v-if="colFieldIndex === 0 && colFields.length > 0">
             <template v-if="aggregationLogic === 'count'">
               <td
@@ -62,7 +60,6 @@
           v-for="(row, rowIndex) in rows"
           :key="JSON.stringify(row)">
           <!-- Row headers -->
-          <!-- NOTE: Customization -->
           <template v-for="(rowField, rowFieldIndex) in rowFields">
             <td
               v-if="spanSize(rows, rowFieldIndex, rowIndex) !== 0"
@@ -86,7 +83,6 @@
             :key="JSON.stringify(col)"
             class="text-right"
             :style="{ 'background-color': heatmapMode !== 'off' && values.length > 1 ? heatmap[JSON.stringify({ col, row })] : 'unset' }">
-            <!-- NOTE: Customization -->
             <template v-if="$scopedSlots.value">
               <template v-if="aggregationLogic === 'count'">
                 <slot
@@ -108,7 +104,6 @@
               {{ displayedValues[JSON.stringify({ col, row })].toLocaleString() }}
             </template>
           </td>
-          <!-- NOTE: Customization -->
           <!-- Row footers (if slots are provided) -->
           <template v-if="colFields.length > 0">
             <template v-if="aggregationLogic === 'count'">
@@ -136,7 +131,6 @@
           </template>
         </tr>
       </tbody>
-      <!-- NOTE: Customization -->
       <!-- Table footer -->
       <tfoot v-if="rowFields.length > 0">
         <tr>
