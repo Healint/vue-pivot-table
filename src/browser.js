@@ -1,3 +1,5 @@
+// REF: https://vuejs.org/v2/cookbook/packaging-sfc-for-npm.html#What-does-my-packaged-component-look-like
+
 // Import vue components
 import Pivot from './Pivot';
 import PivotTable from './PivotTable';
@@ -27,4 +29,3 @@ const plugin = { install };
 // To allow use as module (npm/webpack/etc.) export component
 export const DynamicPivotTable = Pivot;
 export const StaticPivotTable = PivotTable;
-
