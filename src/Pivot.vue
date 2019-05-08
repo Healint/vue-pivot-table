@@ -21,7 +21,7 @@
           v-model="internal.fields"
           class="d-flex flex-row drag-area flex-wrap"
           :class="dragAreaClass"
-          :options="{ group: 'fields' }"
+          group="fields"
           @start="start"
           @end="end">
           <div
@@ -69,7 +69,7 @@
         </div>
         <draggable
           v-model="internal.colFields"
-          :options="{ group: 'fields' }"
+          group="fields"
           @start="start"
           @end="end"
           class="d-flex flex-row drag-area border-primary"
@@ -106,7 +106,7 @@
         </div>
         <draggable
           v-model="internal.rowFields"
-          :options="{ group: 'fields' }"
+          group="fields"
           @start="start"
           @end="end"
           class="d-flex flex-column align-items-start drag-area border-primary"
