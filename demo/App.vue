@@ -11,7 +11,7 @@
     </h2>
 
     <div class="mb-5">
-      <pivot
+      <dynamic-pivot-table
         :data="asyncData"
         :fields="fields"
         :row-fields="rowFields"
@@ -60,7 +60,7 @@
           </svg>
           {{ value | capitalize }}
         </template>
-      </pivot>
+      </dynamic-pivot-table>
     </div>
 
     <h2 class="border-bottom pb-2 mb-4">
@@ -68,7 +68,7 @@
     </h2>
 
     <div class="mb-5">
-      <pivot-table
+      <static-pivot-table
         :data="asyncData"
         :row-fields="rowFields"
         :col-fields="colFields"
@@ -117,19 +117,22 @@
           </svg>
           {{ value | capitalize }}
         </template>
+      </static-pivot-table>
     </div>
   </div>
 </template>
 
 <script>
-import Pivot from '../src/Pivot'
-import PivotTable from '../src/PivotTable'
+import { DynamicPivotTable, StaticPivotTable } from '../src/browser'
 
 const aggregationFieldName = 'Sample'
 
 export default {
   name: 'App',
-  components: { Pivot, PivotTable },
+  components: {
+    DynamicPivotTable,
+    StaticPivotTable
+  },
   data: () => {
     return {
       heatmapMode: 'table',
