@@ -4,12 +4,20 @@
   "private": false,
   "version": "0.0.1",
   "author": "MarketConnect",
+  "contributors": [
+    {
+      "name": "Lim Jiechao",
+      "email": "jiechao@healint.com",
+      "url": "https://jiechaolim.com"
+    }
+  ],
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/MarketConnect/vue-pivot-table"
+    "url": "https://github.com/Healint/vue-pivot-table"
   },
   "main": "dist/vue-pivot-table.js",
+  "browser": "dist/vue-pivot-table.browser.js",
   "scripts": {
     "dev": "webpack-dev-server --progress",
     "build": "npm run build:lib & npm run build:browser",
