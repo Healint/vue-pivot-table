@@ -203,7 +203,7 @@ export default {
 </script>
 
 <style lang="scss">
-$enable-rounded: false;
+$enable-rounded: true;
 @import '~bootstrap/scss/bootstrap.scss';
 
 /* FontAwesome icons */
