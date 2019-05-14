@@ -315,12 +315,18 @@ export default {
     colReferences () { return this.cols.map(col => `"col":${JSON.stringify(col)}`) },
     rowReferences () { return this.rows.map(row => `"row":${JSON.stringify(row)}`) },
     maxColValues () {
+      let entries = (
+        this.aggregationLogic === 'count' && this.valuesToDisplay === 'percentage-col-sum'
+          ? Object.entries(this.valuesColPercentage)
+          : this.entries
+      )
+
       return (
         this.colReferences.map(
           colReference => {
             return (
               Math.max(
-                ...this.entries
+                ...entries
                   .filter(([key, value]) => key.includes(colReference))
                   .map(([key, value]) => value)
               )
@@ -330,12 +336,18 @@ export default {
       )
     },
     minColValues () {
+      let entries = (
+        this.aggregationLogic === 'count' && this.valuesToDisplay === 'percentage-col-sum'
+          ? Object.entries(this.valuesColPercentage)
+          : this.entries
+      )
+
       return (
         this.colReferences.map(
           colReference => {
             return (
               Math.min(
-                ...this.entries
+                ...entries
                   .filter(([key, value]) => key.includes(colReference))
                   .map(([key, value]) => value)
               )
@@ -345,12 +357,18 @@ export default {
       )
     },
     maxRowValues () {
+      let entries = (
+        this.aggregationLogic === 'count' && this.valuesToDisplay === 'percentage-row-sum'
+          ? Object.entries(this.valuesRowPercentage)
+          : this.entries
+      )
+
       return (
         this.rowReferences.map(
           rowReference => {
             return (
               Math.max(
-                ...this.entries
+                ...entries
                   .filter(([key, value]) => key.includes(rowReference))
                   .map(([key, value]) => value)
               )
@@ -360,12 +378,18 @@ export default {
       )
     },
     minRowValues () {
+      let entries = (
+        this.aggregationLogic === 'count' && this.valuesToDisplay === 'percentage-row-sum'
+          ? Object.entries(this.valuesRowPercentage)
+          : this.entries
+      )
+
       return (
         this.rowReferences.map(
           rowReference => {
             return (
               Math.min(
-                ...this.entries
+                ...entries
                   .filter(([key, value]) => key.includes(rowReference))
                   .map(([key, value]) => value)
               )
@@ -395,12 +419,20 @@ export default {
       )
     },
     colsHeatmap () {
+      let entries
+
+      if (this.aggregationLogic === 'count' && this.valuesToDisplay === 'percentage-col-sum') {
+        entries = Object.entries(this.valuesColPercentage)
+      } else {
+        entries = this.entries
+      }
+
       return (
         this.colReferences
           .map(
             (colReference, index) => {
               return (
-                this.entries
+                entries
                   .filter(
                     ([key, value]) => {
                       return key.includes(colReference)
@@ -429,12 +461,20 @@ export default {
       )
     },
     rowsHeatmap () {
+      let entries
+
+      if (this.aggregationLogic === 'count' && this.valuesToDisplay === 'percentage-row-sum') {
+        entries = Object.entries(this.valuesRowPercentage)
+      } else {
+        entries = this.entries
+      }
+
       return (
         this.rowReferences
           .map(
             (rowReference, index) => {
               return (
-                this.entries
+                entries
                   .filter(
                     ([key, value]) => {
                       return key.includes(rowReference)
