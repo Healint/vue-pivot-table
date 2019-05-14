@@ -180,7 +180,9 @@
           <td
             v-if="colFields.length > 0"
             class="summation"
-            style="border-left: 2px solid #dee2e6;"/>
+            style="border-left: 2px solid #dee2e6;">
+            {{ sumOfRawNumberCount.toLocaleString() }}
+          </td>
         </tr>
       </tfoot>
     </table>
@@ -289,6 +291,20 @@ export default {
     entries () { return Object.entries(this.table) },
     colAggregates () { return this.computeChosenAggregates('col') },
     rowAggregates () { return this.computeChosenAggregates('row') },
+    sumOfRawNumberCount () {
+      let sumOfRowAggregates = this.rowAggregates.reduce((sum, item) => sum + item, 0)
+      let sumOfColAggregates = this.colAggregates.reduce((sum, item) => sum + item, 0)
+
+      if (
+        this.aggregationLogic === 'count' &&
+        this.valuesToDisplay === 'raw-numbers' &&
+        sumOfRowAggregates === sumOfColAggregates
+      ) {
+        return sumOfColAggregates
+      } else {
+        return ''
+      }
+    },
     valuesColPercentage () { return this.computePercentages('col') },
     valuesRowPercentage () { return this.computePercentages('row') },
     // Compound property for watch single callback
