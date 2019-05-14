@@ -18,6 +18,7 @@
         :col-fields="colFields"
         :reducer="reducer"
         :heatmap-mode="heatmapMode"
+        :show-heatmap="showHeatmap"
         :default-show-settings="defaultShowSettings"
         :values-to-display="valuesToDisplay"
         :aggregation-logic="aggregationLogic"
@@ -74,6 +75,7 @@
         :col-fields="colFields"
         :reducer="reducer"
         :heatmap-mode="heatmapMode"
+        :show-heatmap="showHeatmap"
         :default-show-settings="defaultShowSettings"
         :is-data-loading="isDataLoading"
         :values-to-display="valuesToDisplay"
@@ -135,6 +137,7 @@ export default {
   },
   data: () => {
     return {
+      showHeatmap: true,
       heatmapMode: 'table',
       aggregationLogic: 'sum',
       aggregationField: aggregationFieldName,

@@ -82,7 +82,7 @@
             v-for="col in cols"
             :key="JSON.stringify(col)"
             class="text-right"
-            :style="{ 'background-color': heatmapMode !== 'off' && values.length > 1 ? heatmap[JSON.stringify({ col, row })] : 'unset' }">
+            :style="{ 'background-color': showHeatmap && values.length > 1 ? heatmap[JSON.stringify({ col, row })] : 'unset' }">
             <template v-if="$scopedSlots.value">
               <template v-if="aggregationLogic === 'count'">
                 <slot
@@ -246,7 +246,11 @@ export default {
       required: true,
       default: () => 'table'
     },
-
+    showHeatmap: {
+      type: Boolean,
+      required: false,
+      default: () => true
+    },
     colorGradations: {
       type: Array,
       required: false,
@@ -355,7 +359,7 @@ export default {
       )
     },
     heatmap () {
-      if (this.heatmapMode === 'off') { return null }
+      if (!this.showHeatmap) { return null }
       return this[`${this.heatmapMode}Heatmap`]
     },
     tableHeatmap () {

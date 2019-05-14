@@ -143,7 +143,8 @@
           :values-to-display="valuesToDisplay"
           :aggregation-logic="aggregationLogic"
           :aggregation-field="aggregationField"
-          :heatmap-mode="heatmapMode">
+          :heatmap-mode="heatmapMode"
+          :show-heatmap="showHeatmap">
           <!-- pass down scoped slots -->
           <template
             v-for="(slot, slotName) in $scopedSlots"
@@ -230,6 +231,10 @@ export default {
       type: String,
       required: true,
       default: () => 'table'
+    },
+    showHeatmap: {
+      type: Boolean,
+      required: false
     }
   },
   data: function () {
