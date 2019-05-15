@@ -602,13 +602,9 @@ export default {
   },
   created: function () {
     this.showSettings = this.defaultShowSettings
+    this.fieldFilters = { ...this.constructFieldFilters() }
+    this.filteredData = [...this.data]
   },
-  watch: {
-    data: function () {
-      this.fieldFilters = this.constructFieldFilters()
-      this.filteredData = [...this.data]
-    },
-  }
 }
 </script>
 
