@@ -279,13 +279,6 @@ export default {
       table: {} // Alas Vue does not support JS Map
     }
   },
-  filters: {
-    capitalize: function (value) {
-      if (!value) { return '' }
-      value = value.toString()
-      return value.charAt(0).toUpperCase() + value.slice(1)
-    }
-  },
   computed: {
     values () { return Object.values(this.table) },
     entries () { return Object.entries(this.table) },
@@ -307,8 +300,6 @@ export default {
     },
     valuesColPercentage () { return this.computePercentages('col') },
     valuesRowPercentage () { return this.computePercentages('row') },
-    // Compound property for watch single callback
-    colsAndRows () { return [this.cols, this.rows] },
     maxTableValue () { return Math.max(...this.values) },
     minTableValue () { return Math.min(...this.values) },
     lastIndexOfColorGradation () { return this.colorGradations.length - 1 },
@@ -575,7 +566,9 @@ export default {
       }
 
       return rows
-    }
+    },
+    // Compound property for watch single callback
+    colsAndRows () { return [this.cols, this.rows] }
   },
   methods: {
     // Get data filtered
@@ -761,6 +754,13 @@ export default {
   },
   created () {
     this.computeValues()
+  },
+  filters: {
+    capitalize: function (value) {
+      if (!value) { return '' }
+      value = value.toString()
+      return value.charAt(0).toUpperCase() + value.slice(1)
+    }
   }
 }
 </script>
