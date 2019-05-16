@@ -75,7 +75,7 @@
                   width="20"
                   height="20"
                   role="img"
-                  style="margin: -6px 2px 0 2px; fill: white;"
+                  style="margin: -6px 1px 0 1px; fill: white;"
                   viewBox="0 0 24 24">
                   <path d="M10 18h4v-2h-4v2zM3 6v2h18V6H3zm3 7h12v-2H6v2z"/>
                   <path
@@ -241,7 +241,7 @@
                   width="20"
                   height="20"
                   role="img"
-                  style="margin: -6px 2px 0 2px; fill: white;"
+                  style="margin: -6px 1px 0 1px; fill: white;"
                   viewBox="0 0 24 24">
                   <path d="M10 18h4v-2h-4v2zM3 6v2h18V6H3zm3 7h12v-2H6v2z"/>
                   <path
@@ -394,7 +394,7 @@
                   width="20"
                   height="20"
                   role="img"
-                  style="margin: -6px 2px 0 2px; fill: white;"
+                  style="margin: -6px 1px 0 1px; fill: white;"
                   viewBox="0 0 24 24">
                   <path d="M10 18h4v-2h-4v2zM3 6v2h18V6H3zm3 7h12v-2H6v2z"/>
                   <path
