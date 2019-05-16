@@ -58,24 +58,26 @@
                 <svg
                   v-if="Object.values(fieldFilters[field.label]).some(value => !value)"
                   xmlns="http://www.w3.org/2000/svg"
+                  width="16"
+                  height="16"
                   aria-hidden="true"
                   focusable="false"
                   data-prefix="fas"
                   data-icon="filter"
                   class="small svg-inline--fa fa-filter"
-                  :class="{ 'filter-in-use': Object.values(fieldFilters[field.label]).some(value => !value) }"
                   role="img"
-                  viewBox="0 0 512 512"><path
+                  viewBox="0 0 512 512">
+                  <path
                     fill="currentColor"
                     d="M487.976 0H24.028C2.71 0-8.047 25.866 7.058 40.971L192 225.941V432c0 7.831 3.821 15.17 10.237 19.662l80 55.98C298.02 518.69 320 507.493 320 487.98V225.941l184.947-184.97C520.021 25.896 509.338 0 487.976 0z"/>
                 </svg>
                 <svg
                   v-else
+                  style="fill: white"
+                  class="small svg-inline--fa"
                   xmlns="http://www.w3.org/2000/svg"
-                  width="20"
-                  height="20"
-                  role="img"
-                  style="margin: -6px 1px 0 1px; fill: white;"
+                  width="16"
+                  height="16"
                   viewBox="0 0 24 24">
                   <path d="M10 18h4v-2h-4v2zM3 6v2h18V6H3zm3 7h12v-2H6v2z"/>
                   <path
@@ -224,24 +226,26 @@
                 <svg
                   v-if="Object.values(fieldFilters[field.label]).some(value => !value)"
                   xmlns="http://www.w3.org/2000/svg"
+                  width="16"
+                  height="16"
                   aria-hidden="true"
                   focusable="false"
                   data-prefix="fas"
                   data-icon="filter"
                   class="small svg-inline--fa fa-filter"
-                  :class="{ 'filter-in-use': Object.values(fieldFilters[field.label]).some(value => !value) }"
                   role="img"
-                  viewBox="0 0 512 512"><path
+                  viewBox="0 0 512 512">
+                  <path
                     fill="currentColor"
                     d="M487.976 0H24.028C2.71 0-8.047 25.866 7.058 40.971L192 225.941V432c0 7.831 3.821 15.17 10.237 19.662l80 55.98C298.02 518.69 320 507.493 320 487.98V225.941l184.947-184.97C520.021 25.896 509.338 0 487.976 0z"/>
                 </svg>
                 <svg
                   v-else
+                  style="fill: white"
+                  class="small svg-inline--fa"
                   xmlns="http://www.w3.org/2000/svg"
-                  width="20"
-                  height="20"
-                  role="img"
-                  style="margin: -6px 1px 0 1px; fill: white;"
+                  width="16"
+                  height="16"
                   viewBox="0 0 24 24">
                   <path d="M10 18h4v-2h-4v2zM3 6v2h18V6H3zm3 7h12v-2H6v2z"/>
                   <path
@@ -377,24 +381,26 @@
                 <svg
                   v-if="Object.values(fieldFilters[field.label]).some(value => !value)"
                   xmlns="http://www.w3.org/2000/svg"
+                  width="16"
+                  height="16"
                   aria-hidden="true"
                   focusable="false"
                   data-prefix="fas"
                   data-icon="filter"
                   class="small svg-inline--fa fa-filter"
-                  :class="{ 'filter-in-use': Object.values(fieldFilters[field.label]).some(value => !value) }"
                   role="img"
-                  viewBox="0 0 512 512"><path
+                  viewBox="0 0 512 512">
+                  <path
                     fill="currentColor"
                     d="M487.976 0H24.028C2.71 0-8.047 25.866 7.058 40.971L192 225.941V432c0 7.831 3.821 15.17 10.237 19.662l80 55.98C298.02 518.69 320 507.493 320 487.98V225.941l184.947-184.97C520.021 25.896 509.338 0 487.976 0z"/>
                 </svg>
                 <svg
                   v-else
+                  style="fill: white"
+                  class="small svg-inline--fa"
                   xmlns="http://www.w3.org/2000/svg"
-                  width="20"
-                  height="20"
-                  role="img"
-                  style="margin: -6px 1px 0 1px; fill: white;"
+                  width="16"
+                  height="16"
                   viewBox="0 0 24 24">
                   <path d="M10 18h4v-2h-4v2zM3 6v2h18V6H3zm3 7h12v-2H6v2z"/>
                   <path
