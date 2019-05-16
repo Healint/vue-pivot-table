@@ -16,7 +16,7 @@
           <button
             class="btn btn-outline-danger"
             @click="resetAllFilters">
-            Reset all filters
+            Reset All Filters
           </button>
         </div>
       </div>
@@ -94,6 +94,24 @@
                   class="modal-body"
                   style="overflow-y: scroll">
                   <div class="form-group">
+                    <div style="display: flex; justify-content: center;">
+                      <div class="btn-group">
+                        <button
+                          @click="deselectAllValues(field.label)"
+                          type="button"
+                          class="btn btn-outline-dark">
+                          Select None
+                        </button>
+                        <button
+                          @click="selectAllValues(field.label)"
+                          type="button"
+                          class="btn btn-outline-dark">
+                          Select All
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="form-group">
                     <div
                       v-for="(value, key) in fieldFilters[field.label]"
                       :key="`${field.label}-${key}`"
@@ -110,22 +128,6 @@
                         :for="key">
                         {{ key }}
                       </label>
-                    </div>
-                  </div>
-                  <div style="display: flex; justify-content: center;">
-                    <div class="btn-group">
-                      <button
-                        @click="deselectAllValues(field.label)"
-                        type="button"
-                        class="btn btn-outline-dark">
-                        Select none
-                      </button>
-                      <button
-                        @click="selectAllValues(field.label)"
-                        type="button"
-                        class="btn btn-outline-dark">
-                        Select all
-                      </button>
                     </div>
                   </div>
                 </div>
@@ -258,6 +260,24 @@
                   class="modal-body"
                   style="overflow-y: scroll">
                   <div class="form-group">
+                    <div style="display: flex; justify-content: center;">
+                      <div class="btn-group">
+                        <button
+                          @click="deselectAllValues(field.label)"
+                          type="button"
+                          class="btn btn-outline-dark">
+                          Select None
+                        </button>
+                        <button
+                          @click="selectAllValues(field.label)"
+                          type="button"
+                          class="btn btn-outline-dark">
+                          Select All
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="form-group">
                     <div
                       v-for="(value, key) in fieldFilters[field.label]"
                       :key="`${field.label}-${key}`"
@@ -274,22 +294,6 @@
                         :for="key">
                         {{ key }}
                       </label>
-                    </div>
-                  </div>
-                  <div style="display: flex; justify-content: center;">
-                    <div class="btn-group">
-                      <button
-                        @click="deselectAllValues(field.label)"
-                        type="button"
-                        class="btn btn-outline-dark">
-                        Select none
-                      </button>
-                      <button
-                        @click="selectAllValues(field.label)"
-                        type="button"
-                        class="btn btn-outline-dark">
-                        Select all
-                      </button>
                     </div>
                   </div>
                 </div>
@@ -409,6 +413,24 @@
                   class="modal-body"
                   style="overflow-y: scroll">
                   <div class="form-group">
+                    <div style="display: flex; justify-content: center;">
+                      <div class="btn-group">
+                        <button
+                          @click="deselectAllValues(field.label)"
+                          type="button"
+                          class="btn btn-outline-dark">
+                          Select None
+                        </button>
+                        <button
+                          @click="selectAllValues(field.label)"
+                          type="button"
+                          class="btn btn-outline-dark">
+                          Select All
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="form-group">
                     <div
                       v-for="(value, key) in fieldFilters[field.label]"
                       :key="`${field.label}-${key}`"
@@ -425,22 +447,6 @@
                         :for="key">
                         {{ key }}
                       </label>
-                    </div>
-                  </div>
-                  <div style="display: flex; justify-content: center;">
-                    <div class="btn-group">
-                      <button
-                        @click="deselectAllValues(field.label)"
-                        type="button"
-                        class="btn btn-outline-dark">
-                        Select none
-                      </button>
-                      <button
-                        @click="selectAllValues(field.label)"
-                        type="button"
-                        class="btn btn-outline-dark">
-                        Select all
-                      </button>
                     </div>
                   </div>
                 </div>
