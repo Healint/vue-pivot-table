@@ -600,7 +600,7 @@ export default {
   created: function () {
     this.showSettings = this.defaultShowSettings
     this.fieldFilters = { ...this.constructFieldFilters() }
-    this.filteredData = [ ...this.filterData() ]
+    this.filteredData = [ ...this.data ]
   },
 }
 </script>
@@ -611,7 +611,11 @@ summary:focus {
   outline: none !important; /* Hides blue outline after being clicked */
 }
 details > summary:first-of-type {
-  list-style-type: none; /* Hides disclosure marker in Firefox */
+  /*
+    REF: https://stackoverflow.com/a/6195588
+    Hides disclosure marker in Firefox
+  */
+  list-style-type: none;
 }
 details[open] > summary::before {
   position: fixed;

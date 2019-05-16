@@ -306,11 +306,13 @@ export default {
     colReferences () { return this.cols.map(col => `"col":${JSON.stringify(col)}`) },
     rowReferences () { return this.rows.map(row => `"row":${JSON.stringify(row)}`) },
     maxColValues () {
-      let entries = (
-        this.aggregationLogic === 'count' && this.valuesToDisplay === 'percentage-col-sum'
-          ? Object.entries(this.valuesColPercentage)
-          : this.entries
-      )
+      // let entries = (
+      //   this.aggregationLogic === 'count' && this.valuesToDisplay === 'percentage-col-sum'
+      //     ? Object.entries(this.valuesColPercentage)
+      //     : this.entries
+      // )
+
+      let entries = Object.entries(this.valuesColPercentage)
 
       return (
         this.colReferences.map(
@@ -327,11 +329,13 @@ export default {
       )
     },
     minColValues () {
-      let entries = (
-        this.aggregationLogic === 'count' && this.valuesToDisplay === 'percentage-col-sum'
-          ? Object.entries(this.valuesColPercentage)
-          : this.entries
-      )
+      // let entries = (
+      //   this.aggregationLogic === 'count' && this.valuesToDisplay === 'percentage-col-sum'
+      //     ? Object.entries(this.valuesColPercentage)
+      //     : this.entries
+      // )
+
+      let entries = Object.entries(this.valuesColPercentage)
 
       return (
         this.colReferences.map(
@@ -348,11 +352,13 @@ export default {
       )
     },
     maxRowValues () {
-      let entries = (
-        this.aggregationLogic === 'count' && this.valuesToDisplay === 'percentage-row-sum'
-          ? Object.entries(this.valuesRowPercentage)
-          : this.entries
-      )
+      // let entries = (
+      //   this.aggregationLogic === 'count' && this.valuesToDisplay === 'percentage-row-sum'
+      //     ? Object.entries(this.valuesRowPercentage)
+      //     : this.entries
+      // )
+
+      let entries = Object.entries(this.valuesRowPercentage)
 
       return (
         this.rowReferences.map(
@@ -369,11 +375,13 @@ export default {
       )
     },
     minRowValues () {
-      let entries = (
-        this.aggregationLogic === 'count' && this.valuesToDisplay === 'percentage-row-sum'
-          ? Object.entries(this.valuesRowPercentage)
-          : this.entries
-      )
+      // let entries = (
+      //   this.aggregationLogic === 'count' && this.valuesToDisplay === 'percentage-row-sum'
+      //     ? Object.entries(this.valuesRowPercentage)
+      //     : this.entries
+      // )
+
+      let entries = Object.entries(this.valuesRowPercentage)
 
       return (
         this.rowReferences.map(
@@ -410,14 +418,16 @@ export default {
       )
     },
     colsHeatmap () {
-      let entries
-
-      if (this.aggregationLogic === 'count' && this.valuesToDisplay === 'percentage-col-sum') {
-        entries = Object.entries(this.valuesColPercentage)
-      } else {
-        entries = this.entries
-      }
-
+      // let entries
+      //
+      // if (this.aggregationLogic === 'count' && this.valuesToDisplay === 'percentage-col-sum') {
+      //   entries = Object.entries(this.valuesColPercentage)
+      // } else {
+      //   entries = this.entries
+      // }
+  
+      let entries = Object.entries(this.valuesColPercentage)
+  
       return (
         this.colReferences
           .map(
@@ -452,13 +462,15 @@ export default {
       )
     },
     rowsHeatmap () {
-      let entries
+      // let entries
+      //
+      // if (this.aggregationLogic === 'count' && this.valuesToDisplay === 'percentage-row-sum') {
+      //   entries = Object.entries(this.valuesRowPercentage)
+      // } else {
+      //   entries = this.entries
+      // }
 
-      if (this.aggregationLogic === 'count' && this.valuesToDisplay === 'percentage-row-sum') {
-        entries = Object.entries(this.valuesRowPercentage)
-      } else {
-        entries = this.entries
-      }
+      let entries = Object.entries(this.valuesRowPercentage)
 
       return (
         this.rowReferences
