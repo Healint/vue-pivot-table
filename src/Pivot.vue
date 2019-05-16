@@ -5,11 +5,20 @@
       v-if="showSettings"
       class="row grid-x flex-nowrap mb-4">
       <div class="col left-col">
-        <button
-          class="btn btn-outline-primary"
-          @click="toggleShowSettings">
-          {{ hideSettingsText }}
-        </button>
+        <div class="form-group">
+          <button
+            class="btn btn-outline-primary"
+            @click="toggleShowSettings">
+            {{ hideSettingsText }}
+          </button>
+        </div>
+        <div class="form-group">
+          <button
+            class="btn btn-outline-danger"
+            @click="resetAllFilters">
+            Reset all filters
+          </button>
+        </div>
       </div>
 
       <!-- Disabled fields -->
@@ -47,16 +56,31 @@
                 </svg>
                 {{ field.label }}
                 <svg
+                  v-if="Object.values(fieldFilters[field.label]).some(value => !value)"
                   xmlns="http://www.w3.org/2000/svg"
                   aria-hidden="true"
                   focusable="false"
                   data-prefix="fas"
                   data-icon="filter"
-                  class="small svg-inline--fa fa-filter fa-w-10"
+                  class="small svg-inline--fa fa-filter"
+                  :class="{ 'filter-in-use': Object.values(fieldFilters[field.label]).some(value => !value) }"
                   role="img"
                   viewBox="0 0 512 512"><path
                     fill="currentColor"
                     d="M487.976 0H24.028C2.71 0-8.047 25.866 7.058 40.971L192 225.941V432c0 7.831 3.821 15.17 10.237 19.662l80 55.98C298.02 518.69 320 507.493 320 487.98V225.941l184.947-184.97C520.021 25.896 509.338 0 487.976 0z"/>
+                </svg>
+                <svg
+                  v-else
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="24"
+                  height="24"
+                  role="img"
+                  style="margin: -6px -4px 0 -4px; fill: white;"
+                  viewBox="0 0 24 24">
+                  <path d="M10 18h4v-2h-4v2zM3 6v2h18V6H3zm3 7h12v-2H6v2z"/>
+                  <path
+                    d="M0 0h24v24H0z"
+                    fill="none"/>
                 </svg>
               </summary>
               <div
@@ -66,7 +90,9 @@
                     {{ field.label }}
                   </h5>
                 </div>
-                <div class="modal-body" style="overflow-y: scroll">
+                <div
+                  class="modal-body"
+                  style="overflow-y: scroll">
                   <div class="form-group">
                     <div
                       v-for="(value, key) in fieldFilters[field.label]"
@@ -86,20 +112,36 @@
                       </label>
                     </div>
                   </div>
+                  <div style="display: flex; justify-content: center;">
+                    <div class="btn-group">
+                      <button
+                        @click="deselectAllValues(field.label)"
+                        type="button"
+                        class="btn btn-outline-dark">
+                        Select none
+                      </button>
+                      <button
+                        @click="selectAllValues(field.label)"
+                        type="button"
+                        class="btn btn-outline-dark">
+                        Select all
+                      </button>
+                    </div>
+                  </div>
                 </div>
                 <div
                   class="modal-footer"
                   style="justify-content: space-between;">
                   <button
                     type="button"
-                    @click="dismissModal(`details-${field.label.toLowerCase().split(' ').join('-')}`)"
+                    @click="dismissModal(field.label)"
                     class="btn btn-secondary"
                     data-dismiss="modal">
                     Cancel
                   </button>
                   <button
                     type="button"
-                    @click="applyFieldFilters(`details-${field.label.toLowerCase().split(' ').join('-')}`)"
+                    @click="applyFieldFilters(field.label)"
                     class="btn btn-primary">
                     Apply
                   </button>
@@ -178,16 +220,31 @@
                 </svg>
                 {{ field.label }}
                 <svg
+                  v-if="Object.values(fieldFilters[field.label]).some(value => !value)"
                   xmlns="http://www.w3.org/2000/svg"
                   aria-hidden="true"
                   focusable="false"
                   data-prefix="fas"
                   data-icon="filter"
-                  class="small svg-inline--fa fa-filter fa-w-10"
+                  class="small svg-inline--fa fa-filter"
+                  :class="{ 'filter-in-use': Object.values(fieldFilters[field.label]).some(value => !value) }"
                   role="img"
                   viewBox="0 0 512 512"><path
                     fill="currentColor"
                     d="M487.976 0H24.028C2.71 0-8.047 25.866 7.058 40.971L192 225.941V432c0 7.831 3.821 15.17 10.237 19.662l80 55.98C298.02 518.69 320 507.493 320 487.98V225.941l184.947-184.97C520.021 25.896 509.338 0 487.976 0z"/>
+                </svg>
+                <svg
+                  v-else
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="24"
+                  height="24"
+                  role="img"
+                  style="margin: -6px -4px 0 -4px; fill: white;"
+                  viewBox="0 0 24 24">
+                  <path d="M10 18h4v-2h-4v2zM3 6v2h18V6H3zm3 7h12v-2H6v2z"/>
+                  <path
+                    d="M0 0h24v24H0z"
+                    fill="none"/>
                 </svg>
               </summary>
               <div
@@ -197,7 +254,9 @@
                     {{ field.label }}
                   </h5>
                 </div>
-                <div class="modal-body" style="overflow-y: scroll">
+                <div
+                  class="modal-body"
+                  style="overflow-y: scroll">
                   <div class="form-group">
                     <div
                       v-for="(value, key) in fieldFilters[field.label]"
@@ -217,20 +276,36 @@
                       </label>
                     </div>
                   </div>
+                  <div style="display: flex; justify-content: center;">
+                    <div class="btn-group">
+                      <button
+                        @click="deselectAllValues(field.label)"
+                        type="button"
+                        class="btn btn-outline-dark">
+                        Select none
+                      </button>
+                      <button
+                        @click="selectAllValues(field.label)"
+                        type="button"
+                        class="btn btn-outline-dark">
+                        Select all
+                      </button>
+                    </div>
+                  </div>
                 </div>
                 <div
                   class="modal-footer"
                   style="justify-content: space-between;">
                   <button
                     type="button"
-                    @click="dismissModal(`details-${field.label.toLowerCase().split(' ').join('-')}`)"
+                    @click="dismissModal(field.label)"
                     class="btn btn-secondary"
                     data-dismiss="modal">
                     Cancel
                   </button>
                   <button
                     type="button"
-                    @click="applyFieldFilters(`details-${field.label.toLowerCase().split(' ').join('-')}`)"
+                    @click="applyFieldFilters(field.label)"
                     class="btn btn-primary">
                     Apply
                   </button>
@@ -296,16 +371,31 @@
                 </svg>
                 {{ field.label }}
                 <svg
+                  v-if="Object.values(fieldFilters[field.label]).some(value => !value)"
                   xmlns="http://www.w3.org/2000/svg"
                   aria-hidden="true"
                   focusable="false"
                   data-prefix="fas"
                   data-icon="filter"
-                  class="small svg-inline--fa fa-filter fa-w-10"
+                  class="small svg-inline--fa fa-filter"
+                  :class="{ 'filter-in-use': Object.values(fieldFilters[field.label]).some(value => !value) }"
                   role="img"
                   viewBox="0 0 512 512"><path
                     fill="currentColor"
                     d="M487.976 0H24.028C2.71 0-8.047 25.866 7.058 40.971L192 225.941V432c0 7.831 3.821 15.17 10.237 19.662l80 55.98C298.02 518.69 320 507.493 320 487.98V225.941l184.947-184.97C520.021 25.896 509.338 0 487.976 0z"/>
+                </svg>
+                <svg
+                  v-else
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="24"
+                  height="24"
+                  role="img"
+                  style="margin: -6px -4px 0 -4px; fill: white;"
+                  viewBox="0 0 24 24">
+                  <path d="M10 18h4v-2h-4v2zM3 6v2h18V6H3zm3 7h12v-2H6v2z"/>
+                  <path
+                    d="M0 0h24v24H0z"
+                    fill="none"/>
                 </svg>
               </summary>
               <div
@@ -315,7 +405,9 @@
                     {{ field.label }}
                   </h5>
                 </div>
-                <div class="modal-body" style="overflow-y: scroll">
+                <div
+                  class="modal-body"
+                  style="overflow-y: scroll">
                   <div class="form-group">
                     <div
                       v-for="(value, key) in fieldFilters[field.label]"
@@ -335,20 +427,36 @@
                       </label>
                     </div>
                   </div>
+                  <div style="display: flex; justify-content: center;">
+                    <div class="btn-group">
+                      <button
+                        @click="deselectAllValues(field.label)"
+                        type="button"
+                        class="btn btn-outline-dark">
+                        Select none
+                      </button>
+                      <button
+                        @click="selectAllValues(field.label)"
+                        type="button"
+                        class="btn btn-outline-dark">
+                        Select all
+                      </button>
+                    </div>
+                  </div>
                 </div>
                 <div
                   class="modal-footer"
                   style="justify-content: space-between;">
                   <button
                     type="button"
-                    @click="dismissModal(`details-${field.label.toLowerCase().split(' ').join('-')}`)"
+                    @click="dismissModal(field.label)"
                     class="btn btn-secondary"
                     data-dismiss="modal">
                     Cancel
                   </button>
                   <button
                     type="button"
-                    @click="applyFieldFilters(`details-${field.label.toLowerCase().split(' ').join('-')}`)"
+                    @click="applyFieldFilters(field.label)"
                     class="btn btn-primary">
                     Apply
                   </button>
@@ -536,12 +644,31 @@ export default {
     toggleModal () {
       this.modalIsOpen = !this.modalIsOpen
     },
-    dismissModal (detailsId) {
-      document.getElementById(detailsId).open = false
-    },
-    applyFieldFilters (detailsId) {
+    resetAllFilters () {
+      this.fieldFilters = { ...this.constructFieldFilters() }
       this.filteredData = [...this.filterData()]
-      document.getElementById(detailsId).open = false
+    },
+    selectAllValues (fieldLabel) {
+      this.fieldFilters[fieldLabel] = (
+        Object.keys(this.fieldFilters[fieldLabel])
+          .map(value => ({ [value]: true }))
+          .reduce((values, value) => ({ ...values, ...value }))
+      )
+    },
+    deselectAllValues (fieldLabel) {
+      this.fieldFilters[fieldLabel] = (
+        Object.keys(this.fieldFilters[fieldLabel])
+          .map(value => ({ [value]: false }))
+          .reduce((values, value) => ({ ...values, ...value }))
+      )
+    },
+    dismissModal (fieldLabel) {
+      this.selectAllValues(fieldLabel)
+      document.getElementById(`details-${fieldLabel.toLowerCase().split(' ').join('-')}`).open = false
+    },
+    applyFieldFilters (fieldLabel) {
+      this.filteredData = [...this.filterData()]
+      document.getElementById(`details-${fieldLabel.toLowerCase().split(' ').join('-')}`).open = false
     },
     constructFieldFilters: function () {
       if (!this.data.length) { return null }
@@ -606,6 +733,10 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+/* Hide scrollbar when content overflows */
+::-webkit-scrollbar {
+  display: none;
+}
 /* Filter Modal */
 summary:focus {
   outline: none !important; /* Hides blue outline after being clicked */
@@ -630,7 +761,7 @@ details[open] > summary::before {
   background: rgba(27,31,35,0.5);
 }
 details > .filter-modal {
-  cursor: default !important;
+  cursor: pointer !important;
   color: initial;
   left: 50vw;
   top: 50vh;
@@ -680,7 +811,7 @@ details summary::-webkit-details-marker {
   }
 
   * {
-    cursor: move !important;
+    cursor: move;
   }
 
   padding-top: 2.5rem;
@@ -710,6 +841,10 @@ details summary::-webkit-details-marker {
   height: 1em;
   overflow: visible;
   vertical-align: -.125em;
+}
+
+svg.small.svg-inline--fa.fa-filter.filter-in-use {
+  color: orange !important;
 }
 
 .btn-draggable .fa-grip-vertical {
