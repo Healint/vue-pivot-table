@@ -60,14 +60,13 @@
                 </svg>
               </summary>
               <div
-                class="filter-modal modal-content"
-                style="width: fit-content; min-width: 30vmin;">
+                class="filter-modal modal-content">
                 <div class="modal-header">
                   <h5 class="modal-title">
                     {{ field.label }}
                   </h5>
                 </div>
-                <div class="modal-body">
+                <div class="modal-body" style="overflow-y: scroll">
                   <div class="form-group">
                     <div
                       v-for="(value, key) in fieldFilters[field.label]"
@@ -192,14 +191,13 @@
                 </svg>
               </summary>
               <div
-                class="filter-modal modal-content"
-                style="width: fit-content; min-width: 30vmin;">
+                class="filter-modal modal-content">
                 <div class="modal-header">
                   <h5 class="modal-title">
                     {{ field.label }}
                   </h5>
                 </div>
-                <div class="modal-body">
+                <div class="modal-body" style="overflow-y: scroll">
                   <div class="form-group">
                     <div
                       v-for="(value, key) in fieldFilters[field.label]"
@@ -311,14 +309,13 @@
                 </svg>
               </summary>
               <div
-                class="filter-modal modal-content"
-                style="width: fit-content; min-width: 30vmin;">
+                class="filter-modal modal-content">
                 <div class="modal-header">
                   <h5 class="modal-title">
                     {{ field.label }}
                   </h5>
                 </div>
-                <div class="modal-body">
+                <div class="modal-body" style="overflow-y: scroll">
                   <div class="form-group">
                     <div
                       v-for="(value, key) in fieldFilters[field.label]"
@@ -611,7 +608,10 @@ export default {
 <style lang="scss" scoped>
 /* Filter Modal */
 summary:focus {
-  outline: none !important;
+  outline: none !important; /* Hides blue outline after being clicked */
+}
+details > summary:first-of-type {
+  list-style-type: none; /* Hides disclosure marker in Firefox */
 }
 details[open] > summary::before {
   position: fixed;
@@ -634,7 +634,8 @@ details > .filter-modal {
   max-height: 80vh;
   max-width: 90vw;
   position: fixed;
-  /*width: 50vw;*/
+  width: -moz-fit-content;
+  width: fit-content;
   z-index: 999;
   animation-name: fadein;
   animation-duration: 300ms;
