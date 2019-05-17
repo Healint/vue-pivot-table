@@ -58,13 +58,12 @@
                 <svg
                   v-if="Object.values(fieldFilters[field.label]).some(value => !value)"
                   xmlns="http://www.w3.org/2000/svg"
-                  width="16"
-                  height="16"
                   aria-hidden="true"
                   focusable="false"
                   data-prefix="fas"
                   data-icon="filter"
                   class="small svg-inline--fa fa-filter"
+                  style="fill: white; width: 18px; height: 18px;"
                   role="img"
                   viewBox="0 0 512 512">
                   <path
@@ -73,11 +72,9 @@
                 </svg>
                 <svg
                   v-else
-                  style="fill: white"
+                  style="fill: white; width: 18px; height: 18px;"
                   class="small svg-inline--fa"
                   xmlns="http://www.w3.org/2000/svg"
-                  width="16"
-                  height="16"
                   viewBox="0 0 24 24">
                   <path d="M10 18h4v-2h-4v2zM3 6v2h18V6H3zm3 7h12v-2H6v2z"/>
                   <path
@@ -94,7 +91,7 @@
                 </div>
                 <div
                   class="modal-body"
-                  style="overflow-y: scroll">
+                  style="overflow-y: scroll; max-height: 60rem;">
                   <div class="form-group">
                     <div style="display: flex; justify-content: center;">
                       <div class="btn-group">
@@ -226,13 +223,12 @@
                 <svg
                   v-if="Object.values(fieldFilters[field.label]).some(value => !value)"
                   xmlns="http://www.w3.org/2000/svg"
-                  width="16"
-                  height="16"
                   aria-hidden="true"
                   focusable="false"
                   data-prefix="fas"
                   data-icon="filter"
                   class="small svg-inline--fa fa-filter"
+                  style="fill: white; width: 18px; height: 18px;"
                   role="img"
                   viewBox="0 0 512 512">
                   <path
@@ -241,11 +237,9 @@
                 </svg>
                 <svg
                   v-else
-                  style="fill: white"
+                  style="fill: white; width: 18px; height: 18px;"
                   class="small svg-inline--fa"
                   xmlns="http://www.w3.org/2000/svg"
-                  width="16"
-                  height="16"
                   viewBox="0 0 24 24">
                   <path d="M10 18h4v-2h-4v2zM3 6v2h18V6H3zm3 7h12v-2H6v2z"/>
                   <path
@@ -381,13 +375,12 @@
                 <svg
                   v-if="Object.values(fieldFilters[field.label]).some(value => !value)"
                   xmlns="http://www.w3.org/2000/svg"
-                  width="16"
-                  height="16"
                   aria-hidden="true"
                   focusable="false"
                   data-prefix="fas"
                   data-icon="filter"
                   class="small svg-inline--fa fa-filter"
+                  style="fill: white; width: 18px; height: 18px;"
                   role="img"
                   viewBox="0 0 512 512">
                   <path
@@ -396,11 +389,9 @@
                 </svg>
                 <svg
                   v-else
-                  style="fill: white"
+                  style="fill: white; width: 18px; height: 18px;"
                   class="small svg-inline--fa"
                   xmlns="http://www.w3.org/2000/svg"
-                  width="16"
-                  height="16"
                   viewBox="0 0 24 24">
                   <path d="M10 18h4v-2h-4v2zM3 6v2h18V6H3zm3 7h12v-2H6v2z"/>
                   <path
@@ -761,6 +752,7 @@ details > summary:first-of-type {
   list-style-type: none;
 }
 details[open] > summary::before {
+  /* Dimmer Overlay */
   position: fixed;
   top: 0;
   right: 0;
@@ -853,10 +845,6 @@ details summary::-webkit-details-marker {
   height: 1em;
   overflow: visible;
   vertical-align: -.125em;
-}
-
-svg.small.svg-inline--fa.fa-filter.filter-in-use {
-  color: orange !important;
 }
 
 .btn-draggable .fa-grip-vertical {
