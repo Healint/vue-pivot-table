@@ -276,7 +276,7 @@ export default {
   },
   data () {
     return {
-      table: {} // Alas Vue does not support JS Map
+      table: Object.freeze({}) // Alas Vue does not support JS Map
     }
   },
   computed: {
@@ -646,47 +646,53 @@ export default {
     // Called when cols/rows have changed => recompute values
     computeValues () {
       // Remove old values
-      this.table = {}
+      this.table = Object.freeze({})
+      let newTable = {}
 
       // Compute new values
-      this.rows.forEach(row => {
-        const rowData = this.filteredData({ data: this.data, rowFilters: row })
-        this.cols.forEach(col => {
-          const datasets = this.filteredData({ data: rowData, colFilters: col })
-          const key = JSON.stringify({ col, row })
-          const aggregate = datasets.reduce(this.reducer, 0)
-          const numberOfDatasets = datasets.length
-          // const allDatasetsAreNumbers = datasets.every(dataset => !Number.isNaN(Number(dataset[this.aggregationField])))
-          const allDatasetsAreNumbers = datasets.every(dataset => typeof (dataset[this.aggregationField]) !== 'string')
-          const value = (
-            this.aggregationLogic === 'count'
-              ? aggregate
-              : (
-                allDatasetsAreNumbers
-                  ? (
-                    this.aggregationLogic === 'mean'
+      this.rows.forEach(
+        row => {
+          const rowData = this.filteredData({ data: this.data, rowFilters: row })
+          this.cols.forEach(
+            col => {
+              const datasets = this.filteredData({ data: rowData, colFilters: col })
+              const key = JSON.stringify({ col, row })
+              const aggregate = datasets.reduce(this.reducer, 0)
+              const numberOfDatasets = datasets.length
+              // const allDatasetsAreNumbers = datasets.every(dataset => !Number.isNaN(Number(dataset[this.aggregationField])))
+              const allDatasetsAreNumbers = datasets.every(dataset => typeof (dataset[this.aggregationField]) !== 'string')
+              const value = (
+                this.aggregationLogic === 'count'
+                  ? aggregate
+                  : (
+                    allDatasetsAreNumbers
                       ? (
-                        aggregate && numberOfDatasets
-                          ? Math.round((aggregate / numberOfDatasets) * 10) / 10
-                          : 0
+                        this.aggregationLogic === 'mean'
+                          ? (
+                            aggregate && numberOfDatasets
+                              ? Math.round((aggregate / numberOfDatasets) * 10) / 10
+                              : 0
+                          )
+                          : aggregate
                       )
-                      : aggregate
+                      : 0
                   )
-                  : 0
               )
+              // console.group('computeValues')
+              // console.log('aggregate', aggregate)
+              // console.log('allDatasetsAreNumbers', allDatasetsAreNumbers)
+              // console.log('mean', aggregate / numberOfDatasets)
+              // console.log(typeof aggregate)
+              // console.log(typeof numberOfDatasets)
+              // console.log('value', value)
+              // console.log('numberOfDatasets', numberOfDatasets)
+              // console.groupEnd('computeValues')
+              newTable[key] = value
+            }
           )
-          // console.group('computeValues')
-          // console.log('aggregate', aggregate)
-          // console.log('allDatasetsAreNumbers', allDatasetsAreNumbers)
-          // console.log('mean', aggregate / numberOfDatasets)
-          // console.log(typeof aggregate)
-          // console.log(typeof numberOfDatasets)
-          // console.log('value', value)
-          // console.log('numberOfDatasets', numberOfDatasets)
-          // console.groupEnd('computeValues')
-          this.table[key] = value
-        })
-      })
+        }
+      )
+      this.table = Object.freeze(JSON.parse(JSON.stringify(newTable)))
     },
     // Compute the chosen aggregate of columns or rows
     computeChosenAggregates (rowOrCol) {
@@ -734,19 +740,25 @@ export default {
     // Compute every cell as percentage of column or row
     computePercentages (rowOrCol) {
       return (
-        this[`${rowOrCol}s`]
-          .map((field, index) => {
-            let reference = `"${rowOrCol}":${JSON.stringify(field)}`
-            return this.entries
-              // Get all entries in the row or column
-              .filter(([key, value]) => key.includes(reference))
-              // Convert value to percentage: `* 100`
-              .map(([key, value]) => ({ [key]: value / this[`${rowOrCol}Aggregates`][index] * 100 }))
-          })
-          // Flatten the array
-          .reduce((array, nestedArray) => [...array, ...nestedArray], [])
-          // Convert to object literal
-          .reduce((datasets, dataset) => ({ ...datasets, ...dataset }), {})
+        Object.freeze(
+          JSON.parse(
+            JSON.stringify(
+              this[`${rowOrCol}s`]
+                .map((field, index) => {
+                  let reference = `"${rowOrCol}":${JSON.stringify(field)}`
+                  return this.entries
+                  // Get all entries in the row or column
+                    .filter(([key, value]) => key.includes(reference))
+                    // Convert value to percentage: `* 100`
+                    .map(([key, value]) => ({ [key]: value / this[`${rowOrCol}Aggregates`][index] * 100 }))
+                })
+                // Flatten the array
+                .reduce((array, nestedArray) => [...array, ...nestedArray], [])
+                // Convert to object literal
+                .reduce((datasets, dataset) => ({ ...datasets, ...dataset }), {})
+            )
+          )
+        )
       )
     }
   },

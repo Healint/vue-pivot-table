@@ -649,7 +649,7 @@ export default {
     },
     resetAllFilters () {
       this.fieldFilters = { ...this.constructFieldFilters() }
-      this.filteredData = [...this.filterData()]
+      this.filteredData = Object.freeze(JSON.parse(JSON.stringify(this.filterData())))
     },
     selectAllValues (fieldLabel) {
       this.fieldFilters[fieldLabel] = (
@@ -670,7 +670,7 @@ export default {
       document.getElementById(`details-${fieldLabel.toLowerCase().split(' ').join('-')}`).open = false
     },
     applyFieldFilters (fieldLabel) {
-      this.filteredData = [...this.filterData()]
+      this.filteredData = Object.freeze(JSON.parse(JSON.stringify(this.filterData())))
       document.getElementById(`details-${fieldLabel.toLowerCase().split(' ').join('-')}`).open = false
     },
     constructFieldFilters: function () {
@@ -730,7 +730,7 @@ export default {
   created: function () {
     this.showSettings = this.defaultShowSettings
     this.fieldFilters = { ...this.constructFieldFilters() }
-    this.filteredData = [ ...this.data ]
+    this.filteredData = Object.freeze(JSON.parse(JSON.stringify(this.data)))
   },
 }
 </script>
