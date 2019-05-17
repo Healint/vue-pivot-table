@@ -186,9 +186,9 @@
         </tr>
       </tfoot>
     </table>
-    <p v-if="data.length">
-      The sample size is {{ data.length.toLocaleString() }}.
-    </p>
+<!--    <p v-if="data.length">-->
+<!--      The sample size is {{ data.length.toLocaleString() }}.-->
+<!--    </p>-->
     <template v-if="aggregationLogic === 'count' && valuesToDisplay !=='raw-numbers'">
       <p class="text-muted">
         <sup>1</sup> Mean of percentages may have rounding error.
