@@ -406,7 +406,8 @@ export default {
         this.entries
           .map(
             ([key, value]) => {
-              return { [key]: this.colorGradations[Math.round((value - this.minTableValue) / (this.maxTableValue - this.minTableValue) * this.lastIndexOfColorGradation)] }
+              let colorGradationIndex = Math.round((value - this.minTableValue) / (this.maxTableValue - this.minTableValue) * this.lastIndexOfColorGradation) || 0
+              return { [key]: this.colorGradations[colorGradationIndex] }
             }
           )
           .reduce(
@@ -442,7 +443,8 @@ export default {
                   )
                   .map(
                     ([key, value]) => {
-                      return { [key]: this.colorGradations[Math.round((value - this.minColValues[index]) / (this.maxColValues[index] - this.minColValues[index]) * this.lastIndexOfColorGradation)] }
+                      let colorGradationIndex = Math.round((value - this.minColValues[index]) / (this.maxColValues[index] - this.minColValues[index]) * this.lastIndexOfColorGradation) || 0
+                      return { [key]: this.colorGradations[colorGradationIndex] }
                     }
                   )
                   .reduce(
@@ -487,7 +489,8 @@ export default {
                   )
                   .map(
                     ([key, value]) => {
-                      return { [key]: this.colorGradations[Math.round((value - this.minRowValues[index]) / (this.maxRowValues[index] - this.minRowValues[index]) * this.lastIndexOfColorGradation)] }
+                      let colorGradationIndex = Math.round((value - this.minRowValues[index]) / (this.maxRowValues[index] - this.minRowValues[index]) * this.lastIndexOfColorGradation) || 0
+                      return { [key]: this.colorGradations[colorGradationIndex] }
                     }
                   )
                   .reduce(
