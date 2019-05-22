@@ -92,7 +92,7 @@
                 <slot
                   v-else-if="valuesToDisplay !== 'raw-numbers'"
                   name="value"
-                  :value="`${displayedValues[JSON.stringify({ col, row })].toFixed(1)}%`"/>
+                  :value="`${displayedValues[JSON.stringify({ col, row })] === null ? '' : displayedValues[JSON.stringify({ col, row })].toFixed(1)}%`"/>
               </template>
               <template v-else>
                 <slot
@@ -406,7 +406,7 @@ export default {
         this.entries
           .map(
             ([key, value]) => {
-              return { [key]: this.colorGradations[Math.round(Math.abs(value) / (this.maxTableValue - this.minTableValue) * this.lastIndexOfColorGradation)] }
+              return { [key]: this.colorGradations[Math.round((value - this.minTableValue) / (this.maxTableValue - this.minTableValue) * this.lastIndexOfColorGradation)] }
             }
           )
           .reduce(
@@ -425,9 +425,10 @@ export default {
       // } else {
       //   entries = this.entries
       // }
-  
+
+      // NOTE: Only for percentage of column sum
       let entries = Object.entries(this.valuesColPercentage)
-  
+
       return (
         this.colReferences
           .map(
@@ -441,7 +442,7 @@ export default {
                   )
                   .map(
                     ([key, value]) => {
-                      return { [key]: this.colorGradations[Math.round(Math.abs(value) / (this.maxColValues[index] - this.minColValues[index]) * this.lastIndexOfColorGradation)] }
+                      return { [key]: this.colorGradations[Math.round((value - this.minColValues[index]) / (this.maxColValues[index] - this.minColValues[index]) * this.lastIndexOfColorGradation)] }
                     }
                   )
                   .reduce(
@@ -470,6 +471,7 @@ export default {
       //   entries = this.entries
       // }
 
+      // NOTE: Only for percentage of row sum
       let entries = Object.entries(this.valuesRowPercentage)
 
       return (
@@ -485,7 +487,7 @@ export default {
                   )
                   .map(
                     ([key, value]) => {
-                      return { [key]: this.colorGradations[Math.round(Math.abs(value) / (this.maxRowValues[index] - this.minRowValues[index]) * this.lastIndexOfColorGradation)] }
+                      return { [key]: this.colorGradations[Math.round((value - this.minRowValues[index]) / (this.maxRowValues[index] - this.minRowValues[index]) * this.lastIndexOfColorGradation)] }
                     }
                   )
                   .reduce(
