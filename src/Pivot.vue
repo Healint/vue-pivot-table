@@ -63,7 +63,7 @@
                   data-prefix="fas"
                   data-icon="filter"
                   class="small svg-inline--fa fa-filter"
-                  style="fill: white; width: 18px; height: 18px;"
+                  style="fill: white; width: 18px; height: 18px; color: gold;"
                   role="img"
                   viewBox="0 0 512 512">
                   <path
@@ -732,6 +732,38 @@ export default {
     this.fieldFilters = { ...this.constructFieldFilters() }
     this.filteredData = Object.freeze(JSON.parse(JSON.stringify(this.data)))
   },
+  // NOTE: START—Development Only. Do not commit
+  watch: {
+    data: function () {
+      this.fieldFilters = { ...this.constructFieldFilters() }
+      this.filteredData = Object.freeze(JSON.parse(JSON.stringify(this.data)))
+    },
+    fields: {
+      handler (newValue) {
+        if (newValue.length) {
+          this.internal.fields = this.fields
+        }
+      },
+      immediate: true
+    },
+    rowFields: {
+      handler (newValue) {
+        if (newValue.length) {
+          this.internal.rowFields = this.rowFields
+        }
+      },
+      immediate: true
+    },
+    colFields: {
+      handler (newValue) {
+        if (newValue.length) {
+          this.internal.colFields = this.colFields
+        }
+      },
+      immediate: true
+    }
+  }
+  // NOTE: END—Development Only. Do not commit
 }
 </script>
 
