@@ -228,7 +228,7 @@
                   data-prefix="fas"
                   data-icon="filter"
                   class="small svg-inline--fa fa-filter"
-                  style="fill: white; width: 18px; height: 18px;"
+                  style="fill: white; width: 18px; height: 18px; color: gold;"
                   role="img"
                   viewBox="0 0 512 512">
                   <path
@@ -380,7 +380,7 @@
                   data-prefix="fas"
                   data-icon="filter"
                   class="small svg-inline--fa fa-filter"
-                  style="fill: white; width: 18px; height: 18px;"
+                  style="fill: white; width: 18px; height: 18px; color: gold;"
                   role="img"
                   viewBox="0 0 512 512">
                   <path
