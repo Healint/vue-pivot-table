@@ -24,7 +24,7 @@
       <!-- Disabled fields -->
       <div class="col">
         <div class="drag-area-label">
-          {{ availableFieldsLabelText }}
+          {{ availableFiltersLabelText }}
         </div>
         <draggable
           :disabled="modalIsOpen"
@@ -545,9 +545,9 @@ export default {
       type: Boolean,
       default: () => true
     },
-    availableFieldsLabelText: {
+    availableFiltersLabelText: {
       type: String,
-      default: () => 'Available fields'
+      default: () => 'Available filters'
     },
     colsLabelText: {
       type: String,
