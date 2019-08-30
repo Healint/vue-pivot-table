@@ -123,8 +123,7 @@
                         v-model="fieldFilters[field.label][key]"
                         checked>
                       <label
-                        class="form-check-label"
-                        :for="key">
+                        class="form-check-label">
                         {{ key }}
                       </label>
                     </div>
@@ -288,8 +287,7 @@
                         v-model="fieldFilters[field.label][key]"
                         checked>
                       <label
-                        class="form-check-label"
-                        :for="key">
+                        class="form-check-label">
                         {{ key }}
                       </label>
                     </div>
@@ -440,8 +438,7 @@
                         v-model="fieldFilters[field.label][key]"
                         checked>
                       <label
-                        class="form-check-label"
-                        :for="key">
+                        class="form-check-label">
                         {{ key }}
                       </label>
                     </div>
