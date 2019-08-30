@@ -666,7 +666,6 @@ export default {
       )
     },
     dismissModal (fieldLabel) {
-      this.selectAllValues(fieldLabel)
       document.getElementById(`details-${fieldLabel.toLowerCase().split(' ').join('-')}`).open = false
     },
     applyFieldFilters (fieldLabel) {
