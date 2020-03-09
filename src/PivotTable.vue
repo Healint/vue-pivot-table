@@ -191,16 +191,16 @@
 <!--    </p>-->
     <template v-if="aggregationLogic === 'count' && valuesToDisplay !=='raw-numbers'">
       <p class="text-muted">
-        <sup>1</sup> Mean of percentages may have rounding error.
+        <sup>1</sup> Mean of percentages have been rounded.
       </p>
       <p class="text-muted">
-        <sup>2</sup> Percentages may not add up to 100% due to rounding error.
+        <sup>2</sup> Percentages may not add up to 100% due to rounding.
       </p>
     </template>
     <p
       v-if="aggregationLogic === 'mean'"
       class="text-muted">
-      <sup>*</sup>Column and row mean may not add up to 100% due to rounding error.
+      <sup>*</sup>Column and row mean may not add up to 100% due to rounding.
     </p>
   </div>
 </template>
