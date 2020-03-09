@@ -675,7 +675,7 @@ export default {
                         this.aggregationLogic === 'mean'
                           ? (
                             aggregate && numberOfDatasets
-                              ? Math.round((aggregate / numberOfDatasets) * 10) / 10
+                              ? Math.round((aggregate / numberOfDatasets) * 100) / 100
                               : 0
                           )
                           : aggregate
@@ -721,7 +721,7 @@ export default {
                 this.aggregationLogic === 'mean'
                   ? (
                     aggregate && numberOfDatasets
-                      ? Math.round((aggregate / numberOfDatasets) * 10) / 10
+                      ? Math.round((aggregate / numberOfDatasets) * 100) / 100
                       : 0
                   )
                   : aggregate
@@ -740,7 +740,7 @@ export default {
       let aggregate = datasets.reduce((sum, [key, value]) => sum + value, 0)
       let numberOfDatasets = datasets.length
 
-      return Math.round(aggregate / numberOfDatasets * 10) / 10
+      return Math.round(aggregate / numberOfDatasets * 100) / 100
     },
     // Compute every cell as percentage of column or row
     computePercentages (rowOrCol) {
