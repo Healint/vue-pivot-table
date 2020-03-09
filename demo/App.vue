@@ -151,7 +151,7 @@ export default {
         if (!Number.isNaN(Number(item[aggregationFieldName]))) {
           return sum + item[aggregationFieldName]
         } else {
-          return 0
+          return 'No result'
         }
       },
       defaultShowSettings: true,
