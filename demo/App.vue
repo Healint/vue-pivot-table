@@ -141,7 +141,7 @@ export default {
       heatmapMode: 'table',
       aggregationLogic: 'sum',
       aggregationField: aggregationFieldName,
-      valuesToDisplay: 'percentage-row-sum',
+      valuesToDisplay: 'raw-numbers-percentage-col-sum',
       asyncData: [],
       fields: [],
       rowFields: [],

@@ -494,6 +494,7 @@
           :values-to-display="valuesToDisplay"
           :aggregation-logic="aggregationLogic"
           :aggregation-field="aggregationField"
+          :aggregate-display-mode="aggregateDisplayMode"
           :heatmap-mode="heatmapMode"
           :show-heatmap="showHeatmap">
           <!-- pass down scoped slots -->
@@ -575,6 +576,10 @@ export default {
       required: true
     },
     aggregationField: {
+      type: String,
+      required: true
+    },
+    aggregateDisplayMode: {
       type: String,
       required: true
     },
