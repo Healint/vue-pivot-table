@@ -262,7 +262,7 @@ export default {
       type: String,
       required: true
     },
-    selectedAggregateDisplayMode: {
+    aggregateDisplayMode: {
       type: String,
       required: true
     },
