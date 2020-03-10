@@ -89,12 +89,18 @@
                   v-if="valuesToDisplay === 'raw-numbers'"
                   name="value"
                   :value="displayedValues[JSON.stringify({ col, row })]"/>
-<!--                <slot-->
-<!--                  v-else-if="valuesToDisplay !== 'sum'"-->
-<!--                  name="value"-->
-<!--                  :value="`${displayedValues[JSON.stringify({ col, row })] === null ? '' : displayedValues[JSON.stringify({ col, row })].toFixed(2)}%`"/>-->
                 <slot
                   v-else-if="valuesToDisplay !== 'raw-numbers'"
+                  name="value"
+                  :value="`${displayedValues[JSON.stringify({ col, row })] === null ? '' : displayedValues[JSON.stringify({ col, row })].toFixed(2)}%`"/>
+              </template>
+              <template v-else-if="aggregationLogic === 'sum'">
+                <slot
+                  v-if="aggregateDisplayMode === 'raw-numbers'"
+                  name="value"
+                  :value="displayedValues[JSON.stringify({ col, row })]"/>
+                <slot
+                  v-else
                   name="value"
                   :value="`${displayedValues[JSON.stringify({ col, row })] === null ? '' : displayedValues[JSON.stringify({ col, row })].toFixed(2)}%`"/>
               </template>
@@ -123,6 +129,23 @@
               </td>
               <td
                 v-else-if="valuesToDisplay === 'raw-numbers-percentage-row-sum'"
+                class="summation">
+                100%
+              </td>
+            </template>
+            <template v-else-if="aggregationLogic === 'sum'">
+              <td
+                v-if="aggregateDisplayMode === 'raw-numbers'"
+                class="summation">
+                {{ rowAggregates[rowIndex].toLocaleString() }}
+              </td>
+              <td
+                v-else-if="aggregateDisplayMode === 'sum-percentage-col-sum'"
+                class="summation">
+                {{ computeMean('row', rowIndex).toFixed(2).toLocaleString() }}%
+              </td>
+              <td
+                v-else-if="aggregateDisplayMode === 'sum-percentage-row-sum'"
                 class="summation">
                 100%
               </td>
@@ -176,6 +199,17 @@
                 {{ computeMean('col', index).toLocaleString() }}%
               </template>
             </template>
+            <template v-else-if="aggregationLogic === 'sum'">
+              <template v-if="aggregateDisplayMode === 'raw-numbers'">
+                {{ colSum.toLocaleString() }}
+              </template>
+              <template v-else-if="aggregateDisplayMode === 'sum-percentage-col-sum'">
+                100%
+              </template>
+              <template v-else-if="aggregateDisplayMode === 'sum-percentage-row-sum'">
+                {{ computeMean('col', index).toFixed(2).toLocaleString() }}%
+              </template>
+            </template>
             <template v-else>
               <template>{{ colSum.toLocaleString() }}</template>
             </template>
@@ -190,9 +224,9 @@
         </tr>
       </tfoot>
     </table>
-<!--    <p v-if="data.length">-->
-<!--      The sample size is {{ data.length.toLocaleString() }}.-->
-<!--    </p>-->
+    <!--    <p v-if="data.length">-->
+    <!--      The sample size is {{ data.length.toLocaleString() }}.-->
+    <!--    </p>-->
     <template v-if="aggregationLogic === 'count' && valuesToDisplay !=='raw-numbers'">
       <p class="text-muted">
         <sup>1</sup> Mean of percentages have been rounded.
@@ -519,13 +553,15 @@ export default {
           case 'raw-numbers':
             return this.table
           case 'raw-numbers-percentage-col-sum':
+          case 'sum-percentage-col-sum':
             return this.valuesColPercentage
           case 'raw-numbers-percentage-row-sum':
+          case 'sum-percentage-row-sum':
             return this.valuesRowPercentage
         }
       } else if (this.aggregationLogic === 'sum') {
-        switch (this.valuesToDisplay) {
-          case 'sum':
+        switch (this.aggregateDisplayMode) {
+          case 'raw-numbers':
             return this.table
           case 'sum-percentage-col-sum':
             return this.valuesColPercentage
@@ -764,7 +800,7 @@ export default {
                 .map((field, index) => {
                   let reference = `"${rowOrCol}":${JSON.stringify(field)}`
                   return this.entries
-                  // Get all entries in the row or column
+                    // Get all entries in the row or column
                     .filter(([key, value]) => key.includes(reference))
                     // Convert value to percentage: `* 100`
                     .map(([key, value]) => ({ [key]: value / this[`${rowOrCol}Aggregates`][index] * 100 }))
