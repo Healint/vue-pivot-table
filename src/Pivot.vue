@@ -38,7 +38,7 @@
             v-for="field in internal.fields"
             :key="field.label">
             <details
-              v-if="fieldFilters.hasOwnProperty(field.label)"
+              v-if="appliedFieldFilters.hasOwnProperty(field.label)"
               :id="`details-${field.label.toLowerCase().split(' ').join('-')}`"
               @toggle="toggleModal"
               class="btn btn-draggable btn-secondary">
@@ -56,7 +56,7 @@
                 </svg>
                 {{ field.label }}
                 <svg
-                  v-if="Object.values(fieldFilters[field.label]).some(value => !value)"
+                  v-if="Object.values(appliedFieldFilters[field.label]).some(value => !value)"
                   xmlns="http://www.w3.org/2000/svg"
                   aria-hidden="true"
                   focusable="false"
@@ -112,7 +112,7 @@
                   </div>
                   <div class="form-group">
                     <div
-                      v-for="(value, key) in fieldFilters[field.label]"
+                      v-for="(value, key) in unappliedFieldFilters[field.label]"
                       :key="`${field.label}-${key}`"
                       class="form-check">
                       <input
@@ -120,7 +120,7 @@
                         type="checkbox"
                         :value="key"
                         :id="key"
-                        v-model="fieldFilters[field.label][key]"
+                        v-model="unappliedFieldFilters[field.label][key]"
                         checked>
                       <label
                         class="form-check-label">
@@ -202,7 +202,7 @@
             v-for="field in internal.colFields"
             :key="field.label">
             <details
-              v-if="fieldFilters.hasOwnProperty(field.label)"
+              v-if="appliedFieldFilters.hasOwnProperty(field.label)"
               :id="`details-${field.label.toLowerCase().split(' ').join('-')}`"
               @toggle="toggleModal"
               class="btn btn-draggable btn-primary">
@@ -220,7 +220,7 @@
                 </svg>
                 {{ field.label }}
                 <svg
-                  v-if="Object.values(fieldFilters[field.label]).some(value => !value)"
+                  v-if="Object.values(appliedFieldFilters[field.label]).some(value => !value)"
                   xmlns="http://www.w3.org/2000/svg"
                   aria-hidden="true"
                   focusable="false"
@@ -276,7 +276,7 @@
                   </div>
                   <div class="form-group">
                     <div
-                      v-for="(value, key) in fieldFilters[field.label]"
+                      v-for="(value, key) in unappliedFieldFilters[field.label]"
                       :key="`${field.label}-${key}`"
                       class="form-check">
                       <input
@@ -284,7 +284,7 @@
                         type="checkbox"
                         :value="key"
                         :id="key"
-                        v-model="fieldFilters[field.label][key]"
+                        v-model="unappliedFieldFilters[field.label][key]"
                         checked>
                       <label
                         class="form-check-label">
@@ -353,7 +353,7 @@
             v-for="field in internal.rowFields"
             :key="field.label">
             <details
-              v-if="fieldFilters.hasOwnProperty(field.label)"
+              v-if="appliedFieldFilters.hasOwnProperty(field.label)"
               :id="`details-${field.label.toLowerCase().split(' ').join('-')}`"
               @toggle="toggleModal"
               class="btn btn-draggable btn-primary">
@@ -371,7 +371,7 @@
                 </svg>
                 {{ field.label }}
                 <svg
-                  v-if="Object.values(fieldFilters[field.label]).some(value => !value)"
+                  v-if="Object.values(appliedFieldFilters[field.label]).some(value => !value)"
                   xmlns="http://www.w3.org/2000/svg"
                   aria-hidden="true"
                   focusable="false"
@@ -427,7 +427,7 @@
                   </div>
                   <div class="form-group">
                     <div
-                      v-for="(value, key) in fieldFilters[field.label]"
+                      v-for="(value, key) in unappliedFieldFilters[field.label]"
                       :key="`${field.label}-${key}`"
                       class="form-check">
                       <input
@@ -435,7 +435,7 @@
                         type="checkbox"
                         :value="key"
                         :id="key"
-                        v-model="fieldFilters[field.label][key]"
+                        v-model="unappliedFieldFilters[field.label][key]"
                         checked>
                       <label
                         class="form-check-label">
@@ -603,7 +603,9 @@ export default {
       dragging: false,
       showSettings: true,
       modalIsOpen: false,
-      fieldFilters: {},
+      didPressApplyButton: null,
+      unappliedFieldFilters: {},
+      appliedFieldFilters: {},
       filteredData: []
     }
   },
@@ -613,7 +615,7 @@ export default {
     },
     fieldsToFilter: function () {
       return (
-        Object.entries(this.fieldFilters)
+        Object.entries(this.unappliedFieldFilters)
           .map(
             ([key, values]) => {
               return [
@@ -650,19 +652,24 @@ export default {
       this.modalIsOpen = !this.modalIsOpen
     },
     resetAllFilters () {
-      this.fieldFilters = { ...this.constructFieldFilters() }
+      this.initializeFilters()
+
       this.filteredData = Object.freeze(JSON.parse(JSON.stringify(this.filterData())))
     },
+    restorePriorFilterSettings () {
+      // Restore the unapplied field filters from the applied ones
+      this.unappliedFieldFilters = JSON.parse(JSON.stringify(this.appliedFieldFilters))
+    },
     selectAllValues (fieldLabel) {
-      this.fieldFilters[fieldLabel] = (
-        Object.keys(this.fieldFilters[fieldLabel])
+      this.unappliedFieldFilters[fieldLabel] = (
+        Object.keys(this.unappliedFieldFilters[fieldLabel])
           .map(value => ({ [value]: true }))
           .reduce((values, value) => ({ ...values, ...value }))
       )
     },
     deselectAllValues (fieldLabel) {
-      this.fieldFilters[fieldLabel] = (
-        Object.keys(this.fieldFilters[fieldLabel])
+      this.unappliedFieldFilters[fieldLabel] = (
+        Object.keys(this.unappliedFieldFilters[fieldLabel])
           .map(value => ({ [value]: false }))
           .reduce((values, value) => ({ ...values, ...value }))
       )
@@ -672,6 +679,12 @@ export default {
     },
     applyFieldFilters (fieldLabel) {
       this.filteredData = Object.freeze(JSON.parse(JSON.stringify(this.filterData())))
+
+      // Apply the draft field filters
+      this.appliedFieldFilters = JSON.parse(JSON.stringify(this.unappliedFieldFilters))
+
+      this.didPressApplyButton = true
+
       document.getElementById(`details-${fieldLabel.toLowerCase().split(' ').join('-')}`).open = false
     },
     constructFieldFilters: function () {
@@ -726,17 +739,25 @@ export default {
           }
         )
       )
+    },
+    initializeFilters () {
+      const fieldFilters = this.constructFieldFilters()
+      this.appliedFieldFilters = JSON.parse(JSON.stringify(fieldFilters))
+      this.unappliedFieldFilters = JSON.parse(JSON.stringify(fieldFilters))
     }
   },
   created: function () {
     this.showSettings = this.defaultShowSettings
-    this.fieldFilters = { ...this.constructFieldFilters() }
+
+    this.initializeFilters()
+
     this.filteredData = Object.freeze(JSON.parse(JSON.stringify(this.data)))
   },
   // NOTE: START—Development Only. Do not commit
   watch: {
     data: function () {
-      this.fieldFilters = { ...this.constructFieldFilters() }
+      this.initializeFilters()
+
       this.filteredData = Object.freeze(JSON.parse(JSON.stringify(this.data)))
     },
     fields: {
@@ -762,6 +783,18 @@ export default {
         }
       },
       immediate: true
+    },
+    modalIsOpen (newValue) {
+      // If modal is dismissed
+      if (!newValue) {
+        if (!this.didPressApplyButton) {
+          // Modal was dismissed by pressing outside of it, hence restore prior filter settings
+          this.restorePriorFilterSettings()
+        } else {
+          // Reset `didPressApplyButton`
+          this.didPressApplyButton = false
+        }
+      }
     }
   }
   // NOTE: END—Development Only. Do not commit
