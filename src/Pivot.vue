@@ -35,7 +35,7 @@
           @start="start"
           @end="end">
           <div
-            v-for="field in internal.fields"
+            v-for="field in sortedFields"
             :key="field.label">
             <details
               v-if="appliedFieldFilters.hasOwnProperty(field.label)"
@@ -545,7 +545,7 @@ export default {
     },
     availableFiltersLabelText: {
       type: String,
-      default: () => 'Available filters'
+      default: () => 'Available Fields'
     },
     colsLabelText: {
       type: String,
@@ -634,6 +634,22 @@ export default {
               return { ...fields, [key]: values }
             },
             {}
+          )
+      )
+    },
+    sortedFields: function () {
+      return (
+        this.internal.fields
+          .sort(
+            ({ label: fieldALabel }, { label: fieldBLabel }) => {
+              if (fieldALabel > fieldBLabel) {
+                return 1
+              } else if (fieldALabel < fieldBLabel) {
+                return -1
+              } else {
+                return 0
+              }
+            }
           )
       )
     }
@@ -788,7 +804,7 @@ export default {
       // If modal is dismissed
       if (!newValue) {
         if (!this.didPressApplyButton) {
-          // Modal was dismissed by pressing (1) outside of it, or (2) Cancel button, hence restore prior filter settings
+          // Modal was dismissed by pressing outside of it, hence restore prior filter settings
           this.restorePriorFilterSettings()
         } else {
           // Reset `didPressApplyButton`
