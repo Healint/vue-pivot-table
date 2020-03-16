@@ -788,7 +788,7 @@ export default {
       // If modal is dismissed
       if (!newValue) {
         if (!this.didPressApplyButton) {
-          // Modal was dismissed by pressing outside of it, hence restore prior filter settings
+          // Modal was dismissed by pressing (1) outside of it, or (2) Cancel button, hence restore prior filter settings
           this.restorePriorFilterSettings()
         } else {
           // Reset `didPressApplyButton`
