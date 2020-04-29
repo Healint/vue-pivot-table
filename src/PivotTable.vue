@@ -246,7 +246,7 @@
 <script>
 import naturalSort from 'javascript-natural-sort'
 
-const colorGradations = Object.freeze(
+const redGradations = Object.freeze(
   [
     'rgb(255,250,250)',
     'rgb(255,239,239)',
@@ -258,6 +258,36 @@ const colorGradations = Object.freeze(
     'rgb(255,119,119)',
     'rgb(255,75,75)',
     'rgb(255,0,0)'
+  ]
+)
+
+const orangeGradations = Object.freeze(
+  [
+    'rgb(255, 250, 250)',
+    'rgb(255, 247, 238)',
+    'rgb(255, 245, 225)',
+    'rgb(255, 242, 211)',
+    'rgb(255, 238, 194)',
+    'rgb(255, 234, 174)',
+    'rgb(255, 230, 150)',
+    'rgb(255, 223, 119)',
+    'rgb(255, 215, 75)',
+    'rgb(255, 200, 0)'
+  ]
+)
+
+const yellowGradations = Object.freeze(
+  [
+    'rgb(255, 250, 250)',
+    'rgb(255, 243, 238)',
+    'rgb(255, 235, 225)',
+    'rgb(255, 226, 211)',
+    'rgb(255, 216, 194)',
+    'rgb(255, 204, 174)',
+    'rgb(255, 190, 150)',
+    'rgb(255, 171, 119)',
+    'rgb(255, 145, 75)',
+    'rgb(255, 100, 0)'
   ]
 )
 
@@ -339,7 +369,7 @@ export default {
     valuesRowPercentage () { return this.computePercentages('row') },
     maxTableValue () { return Math.max(...this.values) },
     minTableValue () { return Math.min(...this.values) },
-    lastIndexOfColorGradation () { return colorGradations.length - 1 },
+    lastIndexOfColorGradation () { return redGradations.length - 1 },
     colReferences () { return this.cols.map(col => `"col":${JSON.stringify(col)}`) },
     rowReferences () { return this.rows.map(row => `"row":${JSON.stringify(row)}`) },
     maxColValues () {
@@ -432,7 +462,7 @@ export default {
           .map(
             ([key, value]) => {
               let colorGradationIndex = Math.round((value - this.minTableValue) / (this.maxTableValue - this.minTableValue) * this.lastIndexOfColorGradation) || 0
-              return { [key]: colorGradations[colorGradationIndex] }
+              return { [key]: redGradations[colorGradationIndex] }
             }
           )
           .reduce(
@@ -466,7 +496,7 @@ export default {
                   .map(
                     ([key, value]) => {
                       let colorGradationIndex = Math.round((value - this.minColValues[index]) / (this.maxColValues[index] - this.minColValues[index]) * this.lastIndexOfColorGradation) || 0
-                      return { [key]: colorGradations[colorGradationIndex] }
+                      return { [key]: orangeGradations[colorGradationIndex] }
                     }
                   )
                   .reduce(
@@ -503,7 +533,7 @@ export default {
                   .map(
                     ([key, value]) => {
                       let colorGradationIndex = Math.round((value - this.minRowValues[index]) / (this.maxRowValues[index] - this.minRowValues[index]) * this.lastIndexOfColorGradation) || 0
-                      return { [key]: colorGradations[colorGradationIndex] }
+                      return { [key]: yellowGradations[colorGradationIndex] }
                     }
                   )
                   .reduce(
@@ -530,7 +560,7 @@ export default {
           .map(
             ([key, value]) => {
               let colorGradationIndex = Math.round((value - this.minColValue) / (this.maxColValue - this.minColValue) * this.lastIndexOfColorGradation) || 0
-              return { [key]: colorGradations[colorGradationIndex] }
+              return { [key]: redGradations[colorGradationIndex] }
             }
           )
           .reduce(
@@ -548,7 +578,7 @@ export default {
           .map(
             ([key, value]) => {
               let colorGradationIndex = Math.round((value - this.minRowValue) / (this.maxRowValue - this.minRowValue) * this.lastIndexOfColorGradation) || 0
-              return { [key]: colorGradations[colorGradationIndex] }
+              return { [key]: redGradations[colorGradationIndex] }
             }
           )
           .reduce(
@@ -559,6 +589,7 @@ export default {
           )
       )
     },
+    // eslint-disable-next-line vue/return-in-computed-property
     displayedValues () {
       if (this.aggregationLogic === 'count') {
         switch (this.valuesToDisplay) {
