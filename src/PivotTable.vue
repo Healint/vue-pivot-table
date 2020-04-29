@@ -343,12 +343,6 @@ export default {
     colReferences () { return this.cols.map(col => `"col":${JSON.stringify(col)}`) },
     rowReferences () { return this.rows.map(row => `"row":${JSON.stringify(row)}`) },
     maxColValues () {
-      // let entries = (
-      //   this.aggregationLogic === 'count' && this.valuesToDisplay === 'raw-numbers-percentage-col-sum'
-      //     ? Object.entries(this.valuesColPercentage)
-      //     : this.entries
-      // )
-
       let entries = Object.entries(this.valuesColPercentage)
 
       return (
@@ -364,14 +358,11 @@ export default {
           }
         )
       )
+    },
+    maxColValue () {
+      return Math.max(...this.maxColValues)
     },
     minColValues () {
-      // let entries = (
-      //   this.aggregationLogic === 'count' && this.valuesToDisplay === 'raw-numbers-percentage-col-sum'
-      //     ? Object.entries(this.valuesColPercentage)
-      //     : this.entries
-      // )
-
       let entries = Object.entries(this.valuesColPercentage)
 
       return (
@@ -388,13 +379,10 @@ export default {
         )
       )
     },
+    minColValue () {
+      return Math.min(...this.minColValues)
+    },
     maxRowValues () {
-      // let entries = (
-      //   this.aggregationLogic === 'count' && this.valuesToDisplay === 'raw-numbers-percentage-row-sum'
-      //     ? Object.entries(this.valuesRowPercentage)
-      //     : this.entries
-      // )
-
       let entries = Object.entries(this.valuesRowPercentage)
 
       return (
@@ -411,13 +399,10 @@ export default {
         )
       )
     },
+    maxRowValue () {
+      return Math.min(...this.maxRowValues)
+    },
     minRowValues () {
-      // let entries = (
-      //   this.aggregationLogic === 'count' && this.valuesToDisplay === 'raw-numbers-percentage-row-sum'
-      //     ? Object.entries(this.valuesRowPercentage)
-      //     : this.entries
-      // )
-
       let entries = Object.entries(this.valuesRowPercentage)
 
       return (
@@ -433,12 +418,15 @@ export default {
           }
         )
       )
+    },
+    minRowValue () {
+      return Math.min(...this.minRowValues)
     },
     heatmap () {
       if (!this.showHeatmap) { return null }
       return this[`${this.heatmapMode}Heatmap`]
     },
-    tableHeatmap () {
+    rawNumbersTableHeatmap () {
       return (
         this.entries
           .map(
@@ -455,16 +443,13 @@ export default {
           )
       )
     },
-    colsHeatmap () {
-      // let entries
-      //
-      // if (this.aggregationLogic === 'count' && this.valuesToDisplay === 'raw-numbers-percentage-col-sum') {
-      //   entries = Object.entries(this.valuesColPercentage)
-      // } else {
-      //   entries = this.entries
-      // }
-
-      // NOTE: Only for percentage of column sum
+    rawNumbersColsHeatmap () {
+      return this.rawNumbersPercentageColSumColsHeatmap
+    },
+    rawNumbersRowsHeatmap () {
+      return this.rawNumbersPercentageRowSumRowsHeatmap
+    },
+    rawNumbersPercentageColSumColsHeatmap () {
       let entries = Object.entries(this.valuesColPercentage)
 
       return (
@@ -501,16 +486,7 @@ export default {
           )
       )
     },
-    rowsHeatmap () {
-      // let entries
-      //
-      // if (this.aggregationLogic === 'count' && this.valuesToDisplay === 'raw-numbers-percentage-row-sum') {
-      //   entries = Object.entries(this.valuesRowPercentage)
-      // } else {
-      //   entries = this.entries
-      // }
-
-      // NOTE: Only for percentage of row sum
+    rawNumbersPercentageRowSumRowsHeatmap () {
       let entries = Object.entries(this.valuesRowPercentage)
 
       return (
@@ -542,6 +518,42 @@ export default {
           .reduce(
             (table, rowEntries) => {
               return { ...rowEntries, ...table }
+            },
+            {}
+          )
+      )
+    },
+    rawNumbersPercentageColSumTableHeatmap () {
+      const entries = Object.entries(this.valuesColPercentage)
+      return (
+        entries
+          .map(
+            ([key, value]) => {
+              let colorGradationIndex = Math.round((value - this.minColValue) / (this.maxColValue - this.minColValue) * this.lastIndexOfColorGradation) || 0
+              return { [key]: colorGradations[colorGradationIndex] }
+            }
+          )
+          .reduce(
+            (entries, entry) => {
+              return { ...entries, ...entry }
+            },
+            {}
+          )
+      )
+    },
+    rawNumbersPercentageRowSumTableHeatmap () {
+      const entries = Object.entries(this.valuesRowPercentage)
+      return (
+        entries
+          .map(
+            ([key, value]) => {
+              let colorGradationIndex = Math.round((value - this.minRowValue) / (this.maxRowValue - this.minRowValue) * this.lastIndexOfColorGradation) || 0
+              return { [key]: colorGradations[colorGradationIndex] }
+            }
+          )
+          .reduce(
+            (entries, entry) => {
+              return { ...entries, ...entry }
             },
             {}
           )
@@ -677,9 +689,11 @@ export default {
       // If left value === current value
       // and top value === 0 (= still in the same top bracket)
       // The left td will take care of the display
-      if (valueIndex > 0 &&
+      if (
+        valueIndex > 0 &&
         values[valueIndex - 1][fieldIndex] === values[valueIndex][fieldIndex] &&
-        (fieldIndex === 0 || (this.spanSize(values, fieldIndex - 1, valueIndex) === 0))) {
+        (fieldIndex === 0 || (this.spanSize(values, fieldIndex - 1, valueIndex) === 0))
+      ) {
         return 0
       }
 
@@ -687,9 +701,11 @@ export default {
       // But stop if the top value !== 0 (= the top bracket has changed)
       let size = 1
       let i = valueIndex
-      while (i + 1 < values.length &&
+      while (
+        i + 1 < values.length &&
         values[i + 1][fieldIndex] === values[i][fieldIndex] &&
-        (fieldIndex === 0 || (i + 1 < values.length && this.spanSize(values, fieldIndex - 1, i + 1) === 0))) {
+        (fieldIndex === 0 || (i + 1 < values.length && this.spanSize(values, fieldIndex - 1, i + 1) === 0))
+      ) {
         i++
         size++
       }
@@ -731,15 +747,6 @@ export default {
                       : 0
                   )
               )
-              // console.group('computeValues')
-              // console.log('aggregate', aggregate)
-              // console.log('allDatasetsAreNumbers', allDatasetsAreNumbers)
-              // console.log('mean', aggregate / numberOfDatasets)
-              // console.log(typeof aggregate)
-              // console.log(typeof numberOfDatasets)
-              // console.log('value', value)
-              // console.log('numberOfDatasets', numberOfDatasets)
-              // console.groupEnd('computeValues')
               newTable[key] = value
             }
           )
@@ -761,9 +768,6 @@ export default {
                   .reduce((aggregate, figure) => aggregate + figure, 0)
               )
               let numberOfDatasets = this[`${rowOrCol === 'row' ? 'col' : 'row'}s`].length
-
-              // console.log('computeChosenAggregates—aggregate', aggregate)
-              // console.log('computeChosenAggregates—numberOfDatasets', numberOfDatasets)
 
               return (
                 this.aggregationLogic === 'mean'
