@@ -678,7 +678,10 @@ export default {
       return rows
     },
     // Compound property for watch single callback
-    colsAndRows () { return [this.cols, this.rows] }
+    colsAndRows () { return [this.cols, this.rows] },
+    numberFormatter () {
+      return number => Intl.NumberFormat('en-US').format(number)
+    }
   },
   methods: {
     // Get data filtered
