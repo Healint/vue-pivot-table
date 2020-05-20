@@ -120,12 +120,12 @@
               <td
                 v-if="valuesToDisplay === 'raw-numbers'"
                 class="summation">
-                {{ rowAggregates[rowIndex] }}
+                {{ numberFormatter(rowAggregates[rowIndex]) }}
               </td>
               <td
                 v-else-if="valuesToDisplay === 'raw-numbers-percentage-col-sum'"
                 class="summation">
-                {{ computeMean('row', rowIndex) }}%
+                {{ numberFormatter(computeMean('row', rowIndex)) }}%
               </td>
               <td
                 v-else-if="valuesToDisplay === 'raw-numbers-percentage-row-sum'"
@@ -137,12 +137,12 @@
               <td
                 v-if="aggregateDisplayMode === 'raw-numbers'"
                 class="summation">
-                {{ rowAggregates[rowIndex] }}
+                {{ numberFormatter(rowAggregates[rowIndex]) }}
               </td>
               <td
                 v-else-if="aggregateDisplayMode === 'sum-percentage-col-sum'"
                 class="summation">
-                {{ computeMean('row', rowIndex).toFixed(2) }}%
+                {{ numberFormatter(computeMean('row', rowIndex).toFixed(2)) }}%
               </td>
               <td
                 v-else-if="aggregateDisplayMode === 'sum-percentage-row-sum'"
@@ -152,7 +152,7 @@
             </template>
             <template v-else>
               <td class="summation">
-                {{ rowAggregates[rowIndex] }}
+                {{ numberFormatter(rowAggregates[rowIndex]) }}
               </td>
             </template>
           </template>
@@ -190,28 +190,28 @@
             class="summation">
             <template v-if="aggregationLogic === 'count'">
               <template v-if="valuesToDisplay === 'raw-numbers'">
-                {{ colSum }}
+                {{ numberFormatter(colSum) }}
               </template>
               <template v-else-if="valuesToDisplay === 'raw-numbers-percentage-col-sum'">
                 100%
               </template>
               <template v-else-if="valuesToDisplay === 'raw-numbers-percentage-row-sum'">
-                {{ computeMean('col', index) }}%
+                {{ numberFormatter(computeMean('col', index)) }}%
               </template>
             </template>
             <template v-else-if="aggregationLogic === 'sum'">
               <template v-if="aggregateDisplayMode === 'raw-numbers'">
-                {{ colSum }}
+                {{ numberFormatter(colSum) }}
               </template>
               <template v-else-if="aggregateDisplayMode === 'sum-percentage-col-sum'">
                 100%
               </template>
               <template v-else-if="aggregateDisplayMode === 'sum-percentage-row-sum'">
-                {{ computeMean('col', index).toFixed(2) }}%
+                {{ numberFormatter(computeMean('col', index).toFixed(2)) }}%
               </template>
             </template>
             <template v-else>
-              <template>{{ colSum }}</template>
+              <template>{{ numberFormatter(colSum) }}</template>
             </template>
           </td>
           <!-- Bottom right dead cell -->
@@ -818,7 +818,7 @@ export default {
     computeMean (rowOrCol, index) {
       let reference = JSON.stringify(this[`${rowOrCol}s`][index])
       let datasets = (
-        this[`values${rowOrCol == 'col' ? 'Row' : 'Col'}PercentageEntries`]
+        this[`values${rowOrCol === 'col' ? 'Row' : 'Col'}PercentageEntries`]
           .filter(([key, value]) => key.includes(reference))
       )
       let aggregate = datasets.reduce((sum, [key, value]) => sum + value, 0)
