@@ -111,7 +111,7 @@
               </template>
             </template>
             <template v-else>
-              {{ displayedValues[JSON.stringify({ col, row })].toLocaleString() }}
+              {{ displayedValues[JSON.stringify({ col, row })] }}
             </template>
           </td>
           <!-- Row footers (if slots are provided) -->
@@ -120,12 +120,12 @@
               <td
                 v-if="valuesToDisplay === 'raw-numbers'"
                 class="summation">
-                {{ rowAggregates[rowIndex].toLocaleString() }}
+                {{ rowAggregates[rowIndex] }}
               </td>
               <td
                 v-else-if="valuesToDisplay === 'raw-numbers-percentage-col-sum'"
                 class="summation">
-                {{ computeMean('row', rowIndex).toLocaleString() }}%
+                {{ computeMean('row', rowIndex) }}%
               </td>
               <td
                 v-else-if="valuesToDisplay === 'raw-numbers-percentage-row-sum'"
@@ -137,12 +137,12 @@
               <td
                 v-if="aggregateDisplayMode === 'raw-numbers'"
                 class="summation">
-                {{ rowAggregates[rowIndex].toLocaleString() }}
+                {{ rowAggregates[rowIndex] }}
               </td>
               <td
                 v-else-if="aggregateDisplayMode === 'sum-percentage-col-sum'"
                 class="summation">
-                {{ computeMean('row', rowIndex).toFixed(2).toLocaleString() }}%
+                {{ computeMean('row', rowIndex).toFixed(2) }}%
               </td>
               <td
                 v-else-if="aggregateDisplayMode === 'sum-percentage-row-sum'"
@@ -152,7 +152,7 @@
             </template>
             <template v-else>
               <td class="summation">
-                {{ rowAggregates[rowIndex].toLocaleString() }}
+                {{ rowAggregates[rowIndex] }}
               </td>
             </template>
           </template>
@@ -190,28 +190,28 @@
             class="summation">
             <template v-if="aggregationLogic === 'count'">
               <template v-if="valuesToDisplay === 'raw-numbers'">
-                {{ colSum.toLocaleString() }}
+                {{ colSum }}
               </template>
               <template v-else-if="valuesToDisplay === 'raw-numbers-percentage-col-sum'">
                 100%
               </template>
               <template v-else-if="valuesToDisplay === 'raw-numbers-percentage-row-sum'">
-                {{ computeMean('col', index).toLocaleString() }}%
+                {{ computeMean('col', index) }}%
               </template>
             </template>
             <template v-else-if="aggregationLogic === 'sum'">
               <template v-if="aggregateDisplayMode === 'raw-numbers'">
-                {{ colSum.toLocaleString() }}
+                {{ colSum }}
               </template>
               <template v-else-if="aggregateDisplayMode === 'sum-percentage-col-sum'">
                 100%
               </template>
               <template v-else-if="aggregateDisplayMode === 'sum-percentage-row-sum'">
-                {{ computeMean('col', index).toFixed(2).toLocaleString() }}%
+                {{ computeMean('col', index).toFixed(2) }}%
               </template>
             </template>
             <template v-else>
-              <template>{{ colSum.toLocaleString() }}</template>
+              <template>{{ colSum }}</template>
             </template>
           </td>
           <!-- Bottom right dead cell -->
@@ -219,13 +219,13 @@
             v-if="colFields.length > 0"
             class="summation"
             style="border-left: 2px solid #dee2e6;">
-            {{ sumOfRawNumberCount.toLocaleString() }}
+            {{ sumOfRawNumberCount }}
           </td>
         </tr>
       </tfoot>
     </table>
     <!--    <p v-if="data.length">-->
-    <!--      The sample size is {{ data.length.toLocaleString() }}.-->
+    <!--      The sample size is {{ data.length }}.-->
     <!--    </p>-->
     <template v-if="aggregationLogic === 'count' && valuesToDisplay !=='raw-numbers'">
       <p class="text-muted">
@@ -366,14 +366,16 @@ export default {
       }
     },
     valuesColPercentage () { return this.computePercentages('col') },
+    valuesColPercentageEntries () { return Object.entries(this.valuesColPercentage) },
     valuesRowPercentage () { return this.computePercentages('row') },
+    valuesRowPercentageEntries () { return Object.entries(this.valuesRowPercentage) },
     maxTableValue () { return Math.max(...this.values) },
     minTableValue () { return Math.min(...this.values) },
     lastIndexOfColorGradation () { return redGradations.length - 1 },
     colReferences () { return this.cols.map(col => `"col":${JSON.stringify(col)}`) },
     rowReferences () { return this.rows.map(row => `"row":${JSON.stringify(row)}`) },
     maxColValues () {
-      let entries = Object.entries(this.valuesColPercentage)
+      let entries = this.valuesColPercentageEntries
 
       return (
         this.colReferences.map(
@@ -393,7 +395,7 @@ export default {
       return Math.max(...this.maxColValues)
     },
     minColValues () {
-      let entries = Object.entries(this.valuesColPercentage)
+      let entries = this.valuesColPercentageEntries
 
       return (
         this.colReferences.map(
@@ -413,7 +415,7 @@ export default {
       return Math.min(...this.minColValues)
     },
     maxRowValues () {
-      let entries = Object.entries(this.valuesRowPercentage)
+      let entries = this.valuesRowPercentageEntries
 
       return (
         this.rowReferences.map(
@@ -433,7 +435,7 @@ export default {
       return Math.min(...this.maxRowValues)
     },
     minRowValues () {
-      let entries = Object.entries(this.valuesRowPercentage)
+      let entries = this.valuesRowPercentageEntries
 
       return (
         this.rowReferences.map(
@@ -480,7 +482,7 @@ export default {
       return this.rawNumbersPercentageRowSumRowsHeatmap
     },
     rawNumbersPercentageColSumColsHeatmap () {
-      let entries = Object.entries(this.valuesColPercentage)
+      let entries = this.valuesColPercentageEntries
 
       return (
         this.colReferences
@@ -517,7 +519,7 @@ export default {
       )
     },
     rawNumbersPercentageRowSumRowsHeatmap () {
-      let entries = Object.entries(this.valuesRowPercentage)
+      let entries = this.valuesRowPercentageEntries
 
       return (
         this.rowReferences
@@ -554,7 +556,7 @@ export default {
       )
     },
     rawNumbersPercentageColSumTableHeatmap () {
-      const entries = Object.entries(this.valuesColPercentage)
+      const entries = this.valuesColPercentageEntries
       return (
         entries
           .map(
@@ -572,7 +574,7 @@ export default {
       )
     },
     rawNumbersPercentageRowSumTableHeatmap () {
-      const entries = Object.entries(this.valuesRowPercentage)
+      const entries = this.valuesRowPercentageEntries
       return (
         entries
           .map(
@@ -748,7 +750,6 @@ export default {
       // Remove old values
       this.table = Object.freeze({})
       let newTable = {}
-
       // Compute new values
       this.rows.forEach(
         row => {
@@ -817,7 +818,7 @@ export default {
     computeMean (rowOrCol, index) {
       let reference = JSON.stringify(this[`${rowOrCol}s`][index])
       let datasets = (
-        Object.entries(this[`values${rowOrCol == 'col' ? 'Row' : 'Col'}Percentage`])
+        this[`values${rowOrCol == 'col' ? 'Row' : 'Col'}PercentageEntries`]
           .filter(([key, value]) => key.includes(reference))
       )
       let aggregate = datasets.reduce((sum, [key, value]) => sum + value, 0)
