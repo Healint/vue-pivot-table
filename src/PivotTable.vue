@@ -219,7 +219,7 @@
             v-if="colFields.length > 0"
             class="summation"
             style="border-left: 2px solid #dee2e6;">
-            {{ sumOfRawNumberCount }}
+            {{ numberFormatter(sumOfRawNumberCount) }}
           </td>
         </tr>
       </tfoot>
